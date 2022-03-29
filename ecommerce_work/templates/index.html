@@ -1,0 +1,592 @@
+{% extends './base.html' %}
+{% load static %}
+{% load mathfilters %}
+<!doctype html>
+<head>
+	{% block title %}<title>Grocery Mart - Ecommerce Category Bootstrap Responsive Website Template - Home : W3Layouts</title>{% endblock %}
+</head>
+
+<body>
+	{% block content %}
+	<!-- banner section -->
+	<section id="home" class="w3l-banner py-5">
+		<div class="banner-content">
+			<div class="container pt-sm-5 pb-md-4">
+				<div class="row align-items-center py-4">
+					<div class="col-md-6">
+						<p class="banner-sub mb-1">Start your daily online shopping!</p>
+						<h3 class="mb-md-5 mb-4 title">Stay home & we will deliver your daily need's
+						</h3>
+						<div class="d-flex align-items-center buttons-banner mt-sm-5 mt-4">
+							<a href="{% url 'shop_page' 'organic-food' %}" class="btn btn-style">Shop Now</a>
+						</div>
+					</div>
+					<div class="col-md-6 right-banner-2 position-relative p-md-0 mt-sm-0 mt-4">
+						<div class="sub-banner-image mx-auto" id="banner-images-from-model">
+							<img loading="eager" importance="high" src="{% static '/images/banner-img.png' %}" class="img-fluid position-relative" alt=" ">
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- //banner section -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+
+ 
+</div>
+	<!-- banner-bottom -->
+	<div class="banner-bottom py-5" id="view_our_products">
+		<div class="container py-lg-5 py-4">
+			<div class="row align-items-center">
+				<div class="col-lg-5 wthree_banner_bottom_left">
+					<div class="position-relative">
+						<img loading="lazy" importance="low" src="{% static '/images/image1.jpg' %}" alt="" class="img-fluid radius-image">
+						<a href="#small-dialog" class="popup-with-zoom-anim play-view text-center position-absolute">
+							<span class="video-play-icon">
+								<span class="fa fa-play"></span>
+							</span>
+						</a>
+						<!-- dialog itself, mfp-hide class is required to make dialog hidden -->
+						<div id="small-dialog" class="zoom-anim-dialog mfp-hide">
+							<iframe src="https://player.vimeo.com/video/106183791?h=b24e6f79f8"
+								allow="autoplay; fullscreen" allowfullscreen=""></iframe>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-7 wthree_banner_bottom_right">
+					<ul class="nav nav-tabs" id="myTab" role="tablist">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="vegetables-tab" data-bs-toggle="tab"
+								data-bs-target="#vegetables" type="button" role="tab" aria-controls="vegetables"
+								aria-selected="true">Vegetables</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="meats-tab" data-bs-toggle="tab" data-bs-target="#meats"
+								type="button" role="tab" aria-controls="meats" aria-selected="false">Meats &
+								Seafood</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="bakeryt-tab" data-bs-toggle="tab" data-bs-target="#bakery"
+								type="button" role="tab" aria-controls="bakery" aria-selected="false">Bakery</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="beverages-tab" data-bs-toggle="tab" data-bs-target="#beverages"
+								type="button" role="tab" aria-controls="beverages"
+								aria-selected="false">Fashion</button>
+						</li>
+					</ul>
+					<div class="tab-content" id="myTabContent">
+						<div class="tab-pane fade show active" id="vegetables" role="tabpanel" aria-labelledby="vegetables-tab">
+							<div class="row agile_ecommerce_tabs">
+								{% for item in vegetables %}
+								<div class="col-md-4 agile_ecommerce_tab_left">
+									<div class="hs-wrapper">
+										<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% for n in vegetables_item_image%}
+											{% if n.name == item %}
+										<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+											{% endif %}
+										{% endfor %}
+										<div class="w3_hs_bottom">
+											<ul>
+												<li>
+													<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal' '#myModal1' '#myModal2' %}"><i
+															class="fas fa-eye"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+									<div class="simpleCart_shelfItem">
+										{% with price=item.price discount=item.discount %}
+										<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+										<form action="#" method="post">
+											<input type="hidden" name="cmd" value="_cart" />
+											<input type="hidden" name="add" value="1" />
+											<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+											<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+											<button type="submit" class="w3ls-cart">Add to cart</button>
+										</form>
+									</div>
+								</div>
+								<!-- modal-card -->
+								<div class="modal fade" id="{% cycle 'myModal' 'myModal1' 'myModal2' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header border-0">
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="row modal-body">
+												<div class="col-md-5 modal_body_left">
+													<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+												</div>
+												<div class="col-md-7 modal_body_right">
+													<h4>{{ item.name }}</h4>
+													<p>{{ item.description }}</p>
+													<div class="modal_body_right_cart simpleCart_shelfItem">
+														<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+														<form action="#" method="post">
+															<input type="hidden" name="cmd" value="_cart">
+															<input type="hidden" name="add" value="1">
+															<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+															<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+															<button type="submit" class="w3ls-cart">Add to cart</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end modal -->
+										{% endwith %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="meats" role="tabpanel" aria-labelledby="meats-tab">
+							<div class="row agile_ecommerce_tabs">
+								{% for item in meats_and_sea_food %}
+								<div class="col-md-4 agile_ecommerce_tab_left">
+									<div class="hs-wrapper">
+										<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% for n in vegetables_item_image%}
+											{% if n.name == item %}
+										<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+											{% endif %}
+										{% endfor %}
+										<div class="w3_hs_bottom">
+											<ul>
+												<li>
+													<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal3' '#myModal4' '#myModal5' %}"><i
+															class="fas fa-eye"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+									<div class="simpleCart_shelfItem">
+										{% with price=item.price discount=item.discount %}
+										<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+										<form action="#" method="post">
+											<input type="hidden" name="cmd" value="_cart" />
+											<input type="hidden" name="add" value="1" />
+											<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+											<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+											<button type="submit" class="w3ls-cart">Add to cart</button>
+										</form>
+									</div>
+								</div>
+								<!-- modal-card -->
+								<div class="modal fade" id="{% cycle 'myModal3' 'myModal4' 'myModal5' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header border-0">
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="row modal-body">
+												<div class="col-md-5 modal_body_left">
+													<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+												</div>
+												<div class="col-md-7 modal_body_right">
+													<h4>{{ item.name }}</h4>
+													<p>{{ item.description }}</p>
+													<div class="modal_body_right_cart simpleCart_shelfItem">
+														<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+														<form action="#" method="post">
+															<input type="hidden" name="cmd" value="_cart">
+															<input type="hidden" name="add" value="1">
+															<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+															<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+															<button type="submit" class="w3ls-cart">Add to cart</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end modal -->
+										{% endwith %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="bakery" role="tabpanel" aria-labelledby="bakery-tab">
+							<div class="row agile_ecommerce_tabs">
+								{% for item in bakery %}
+								<div class="col-md-4 agile_ecommerce_tab_left">
+									<div class="hs-wrapper">
+										<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% for n in vegetables_item_image%}
+											{% if n.name == item %}
+										<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+											{% endif %}
+										{% endfor %}
+										<div class="w3_hs_bottom">
+											<ul>
+												<li>
+													<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal6' '#myModal7' '#myModal8' %}"><i
+															class="fas fa-eye"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+									<div class="simpleCart_shelfItem">
+										{% with price=item.price discount=item.discount %}
+										<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+										<form action="#" method="post">
+											<input type="hidden" name="cmd" value="_cart" />
+											<input type="hidden" name="add" value="1" />
+											<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+											<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+											<button type="submit" class="w3ls-cart">Add to cart</button>
+										</form>
+									</div>
+								</div>
+								<!-- modal-card -->
+								<div class="modal fade" id="{% cycle 'myModal6' 'myModal7' 'myModal8' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header border-0">
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="row modal-body">
+												<div class="col-md-5 modal_body_left">
+													<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+												</div>
+												<div class="col-md-7 modal_body_right">
+													<h4>{{ item.name }}</h4>
+													<p>{{ item.description }}</p>
+													<div class="modal_body_right_cart simpleCart_shelfItem">
+														<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+														<form action="#" method="post">
+															<input type="hidden" name="cmd" value="_cart">
+															<input type="hidden" name="add" value="1">
+															<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+															<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+															<button type="submit" class="w3ls-cart">Add to cart</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end modal -->
+										{% endwith %}
+								{% endfor %}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="beverages" role="tabpanel" aria-labelledby="beverages-tab">
+							<div class="row agile_ecommerce_tabs">
+								{% for item in fashion %}
+								<div class="col-md-4 agile_ecommerce_tab_left">
+									<div class="hs-wrapper">
+										<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% for n in vegetables_item_image%}
+											{% if n.name == item %}
+										<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+											{% endif %}
+										{% endfor %}
+										<div class="w3_hs_bottom">
+											<ul>
+												<li>
+													<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal9' '#myModal10' '#myModal11' %}"><i
+															class="fas fa-eye"></i></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+									<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+									<div class="simpleCart_shelfItem">
+										{% with price=item.price discount=item.discount %}
+										<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+										<form action="#" method="post">
+											<input type="hidden" name="cmd" value="_cart" />
+											<input type="hidden" name="add" value="1" />
+											<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+											<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+											<button type="submit" class="w3ls-cart">Add to cart</button>
+										</form>
+									</div>
+								</div>
+								<!-- modal-card -->
+								<div class="modal fade" id="{% cycle 'myModal9' 'myModal10' 'myModal11' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered">
+										<div class="modal-content">
+											<div class="modal-header border-0">
+												<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+											</div>
+											<div class="row modal-body">
+												<div class="col-md-5 modal_body_left">
+													<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+												</div>
+												<div class="col-md-7 modal_body_right">
+													<h4>{{ item.name }}</h4>
+													<p>{{ item.description }}</p>
+													<div class="modal_body_right_cart simpleCart_shelfItem">
+														<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+														<form action="#" method="post">
+															<input type="hidden" name="cmd" value="_cart">
+															<input type="hidden" name="add" value="1">
+															<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+															<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+															<button type="submit" class="w3ls-cart">Add to cart</button>
+														</form>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- end modal -->
+										{% endwith %}
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //banner-bottom -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+ 
+</div>
+	<!-- banner-bottom1 -->
+	<div class="banner-bottom1">
+		<div class="row agileinfo_banner_bottom1_grids m-0">
+			<div class="col-md-7 agileinfo_banner_bottom1_grid_left">
+				<h3>Free Delivery<span>20% <i>Cashback</i></span></h3>
+				<a class="btn btn-style" href="{% url 'shop_page' 'organic-food' %}">Shop Now</a>
+			</div>
+			<div class="col-md-5 agileinfo_banner_bottom1_grid_right d-flex align-items-center">
+				<h4>Organic Foods</h4>
+			</div>
+		</div>
+	</div>
+	<!-- //banner-bottom1 -->
+
+	<!-- special-deals -->
+	<div class="special-deals py-5">
+		<div class="container py-md-5 py-4">
+			<h2>Special Deals</h2>
+			<div class="row w3agile_special_deals_grids">
+				<div class="col-md-7 w3agile_special_deals_grid_left">
+					<div class="w3agile_special_deals_grid_left_grid">
+						<img loading="lazy" importance="low" src="{% static '/images/bgs3.jpg' %}" alt=" " class="img-fluid" />
+						<div class="w3agile_special_deals_grid_left_grid_pos1">
+							<h5>30%<span>Off/-</span></h5>
+						</div>
+						<div class="w3agile_special_deals_grid_left_grid_pos">
+							<h4>We Offer <span>Best Products</span></h4>
+						</div>
+					</div>
+					<div class="w3agile_special_deals_grid_left_grid">
+						<img loading="lazy" importance="low" src="{% static '/images/bgs5.jpg' %}" alt=" " class="img-fluid" />
+						<div class="w3agile_special_deals_grid_left_grid_pos">
+							<h4>Best Store
+								<span>For GROCERIES</span></h4>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-5 w3agile_special_deals_grid_right">
+					<img loading="lazy" importance="low" src="{% static '/images/bgs4.jpg' %}" alt=" " class="img-fluid" />
+					<div class="w3agile_special_deals_grid_right_pos text-end">
+						<h4>Big <span>Deals</span></h4>
+						<h5>save up <span>to</span> 30%</h5>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //special-deals -->
+
+	<!-- top-products -->
+	<div class="new-products py-5">
+		<div class="container py-md-5 py-4">
+			<h3>Top Products</h3>
+			<div class="row agileinfo_new_products_grids">
+				{% for item in latest_products_grid_1 %}
+				<div class="col-md-3 agileinfo_new_products_grid">
+					<div class="agile_ecommerce_tab_left agileinfo_new_products_grid1">
+						<div class="hs-wrapper hs-wrapper1">
+							<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+							{% for n in vegetables_item_image %}
+								{% if n.name == item %}
+							<img loading="lazy" importance="low" src="{{ n.images.url }}" alt=" " class="img-fluid" />
+								{% endif %}
+							{% endfor %}
+							<div class="w3_hs_bottom w3_hs_bottom_sub">
+								<ul>
+									<li>
+										<a href="#myModal13" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal13' '#myModal14' '#myModal15' '#myModal16' %}"><i
+												class="fas fa-eye"></i></a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+						<div class="simpleCart_shelfItem">
+							{% with price=item.price discount=item.discount %}
+							<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+							<form action="#" method="post">
+								<input type="hidden" name="cmd" value="_cart">
+								<input type="hidden" name="add" value="1">
+								<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+								<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+								<button type="submit" class="w3ls-cart">Add to cart</button>
+							</form>
+						</div>
+						<!-- modal-card -->
+						<div class="modal fade" id="{% cycle 'myModal13' 'myModal14' 'myModal15' 'myModal16' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="row modal-body">
+										<div class="col-md-5 modal_body_left">
+											<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										</div>
+										<div class="col-md-7 modal_body_right">
+											<h4>{{ item.name }}</h4>
+											<p>{{ item.description }}</p>
+											<div class="modal_body_right_cart simpleCart_shelfItem">
+												<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+												<form action="#" method="post">
+													<input type="hidden" name="cmd" value="_cart">
+													<input type="hidden" name="add" value="1">
+													<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+													<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+													<button type="submit" class="w3ls-cart">Add to cart</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end modal -->
+							{% endwith %}
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+			<div class="row agileinfo_new_products_grids">
+				{% for item in latest_products_grid_2 %}
+				<div class="col-md-3 agileinfo_new_products_grid">
+					<div class="agile_ecommerce_tab_left agileinfo_new_products_grid1">
+						<div class="hs-wrapper hs-wrapper1">
+							<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+							{% for n in vegetables_item_image %}
+								{% if n.name == item %}
+							<img loading="lazy" importance="low" src="{{ n.images.url }}" alt=" " class="img-fluid" />
+								{% endif %}
+							{% endfor %}
+							<div class="w3_hs_bottom w3_hs_bottom_sub">
+								<ul>
+									<li>
+										<a href="#myModal13" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal17' '#myModal18' '#myModal19' '#myModal20' %}"><i
+												class="fas fa-eye"></i></a>
+									</li>
+								</ul>
+							</div>
+						</div>
+						<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+						<div class="simpleCart_shelfItem">
+							{% with price=item.price discount=item.discount %}
+							<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+							<form action="#" method="post">
+								<input type="hidden" name="cmd" value="_cart">
+								<input type="hidden" name="add" value="1">
+								<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+								<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+								<button type="submit" class="w3ls-cart">Add to cart</button>
+							</form>
+						</div>
+						<!-- modal-card -->
+						<div class="modal fade" id="{% cycle 'myModal17' 'myModal18' 'myModal19' 'myModal20' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="row modal-body">
+										<div class="col-md-5 modal_body_left">
+											<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										</div>
+										<div class="col-md-7 modal_body_right">
+											<h4>{{ item.name }}</h4>
+											<p>{{ item.description }}</p>
+											<div class="modal_body_right_cart simpleCart_shelfItem">
+												<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+												<form action="#" method="post">
+													<input type="hidden" name="cmd" value="_cart">
+													<input type="hidden" name="add" value="1">
+													<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+													<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+													<button type="submit" class="w3ls-cart">Add to cart</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end modal -->
+							{% endwith %}
+					</div>
+				</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+	<!-- //new-products -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+ 
+</div>
+	<!-- top-brands -->
+	<section class="top-brands w3l-partners py-5" id="partners">
+		<div class="container py-4">
+			<h3>Top Brands</h3>
+			<div class="row align-items-center">
+				<div class="owl-three owl-carousel owl-theme logo-view">
+					<div class="item">
+						<img loading="lazy" importance="low" src="{% static '/images/tb1.png' %}" alt="company-logo" class="img-fluid">
+					</div>
+					<div class="item">
+						<img loading="lazy" importance="low" src="{% static '/images/tb2.png' %}" alt="company-logo" class="img-fluid">
+					</div>
+					<div class="item">
+						<img loading="lazy" importance="low" src="{% static '/images/tb3.png' %}" alt="company-logo" class="img-fluid">
+					</div>
+					<div class="item">
+						<img loading="lazy" importance="low" src="{% static '/images/tb4.png' %}" alt="company-logo" class="img-fluid">
+					</div>
+					<div class="item">
+						<img loading="lazy" importance="low" src="{% static '/images/tb5.png' %}" alt="company-logo" class="img-fluid">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	<!-- //top-brands -->
+<script>
+	let bannerDiv = document.getElementById('banner-images-from-model');
+	function slider(){
+
+	};
+</script>
+	{% endblock %}
+
+
+</body>
+</html>

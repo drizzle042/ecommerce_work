@@ -1,0 +1,316 @@
+{% extends './base.html' %}
+{% load static %}
+{% load mathfilters %}
+<!doctype html>
+<html lang="en">
+<head>
+	{% block title %}<title>Grocery Mart - Ecommerce Category Bootstrap Responsive Website Template - Products 1 : W3Layouts</title>{% endblock %}
+</head>
+
+<body>
+	{% block content %}
+	<!-- banner -->
+	<div class="banner banner2">
+		<div class="container">
+			<h2>{% if Category_|title == "Fashion" %}Top Selling <span>{{ Category_|title }} Products</span> Flat <i>30% Discount</i>{% elif Category_ %}Top Selling <span>{{ Category_|title }} Products</span>{% else %}Search Results{% endif %}</h2>
+		</div>
+	</div>
+	<!-- breadcrumbs -->
+	<div class="breadcrumb_dress">
+		<div class="container">
+			<ul>
+				<li><a href="{% url 'homepage' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a>
+					<i>/</i></li>
+				<li>{{ Category_|title }}{% if request.GET.search %}Search Results for <i style="text-decoration: underline;">{{ request.GET.search }}</i>{% endif %}</li>
+			</ul>
+		</div>
+	</div>
+	<!-- //breadcrumbs -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+
+ 
+</div>
+	<!-- mobiles -->
+	<div class="mobiles py-5">
+		<div class="container py-lg-4 py-3">
+			<div class="row w3ls_mobiles_grids">
+				<div class="col-md-4 w3ls_mobiles_grid_left">
+					<div class="w3ls_mobiles_grid_left_grid">
+						<h3>Categories</h3>
+						<div class="w3ls_mobiles_grid_left_grid_sub">
+							<ul class="panel_bottom">
+								<li><a href="{% url 'shop_page' 'fashion' %}">Fashion</a></li>
+								<li><a href="{% url 'shop_page' 'meat-and-seafood' %}">Meat and Sea Food</a></li>
+								<li><a href="{% url 'shop_page' 'kitchen-tools' %}">Kitchen Tools</a></li>
+								<li><a href="{% url 'shop_page' 'cook-ware' %}">Cookware</a></li>
+								<li><a href="{% url 'shop_page' 'oil-vinegar' %}">Oils, Vinegar</a></li>
+								<li><a href="{% url 'shop_page' 'fast-food' %}">Fast Food</a></li>
+								<li><a href="{% url 'shop_page' 'snack-food' %}">Snacks</a></li>
+								<li><a href="{% url 'shop_page' 'organic-food' %}">Organic Foods</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-8 w3ls_mobiles_grid_right">
+					<div class="row">
+						<div class="col-md-6 w3ls_mobiles_grid_right_left">
+							<div class="w3ls_mobiles_grid_right_grid1">
+								<img loading="lazy" importance="low" src="{% static '/images/pbg1.jpg' %}" alt=" " class="img-fluid radius-image" />
+								<div class="w3ls_mobiles_grid_right_grid1_pos1">
+									<h3>Best<span> Price</span> on {{ Category_|title }}</h3>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6 w3ls_mobiles_grid_right_left">
+							<div class="w3ls_mobiles_grid_right_grid1">
+								<img loading="lazy" importance="low" src="{% static '/images/pbg2.jpg' %}" alt=" " class="img-fluid radius-image" />
+								<div class="w3ls_mobiles_grid_right_grid1_pos">
+									<h3>Best Deals <span> For New</span>Products</h3>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="w3ls_mobiles_grid_right_grid2">
+						<div class="w3ls_mobiles_grid_right_grid2_left">
+							<h3 style="white-space: nowrap;">Showing Results:{% if paginator.has_other_pages %}
+									{% if paginator.has_previous %}
+										<a style="padding-inline: 10px;" href="?page=
+												{{ paginator.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">  <span class="material-icons" style="color: crimson;">keyboard_double_arrow_left</span>  </a>
+									{% else %}
+										<a style="padding-inline: 10px;" href="#!">  <span class="material-icons" style="color: crimson;">home</span>  </a>
+									{% endif %}
+									{% if paginator.has_next %}
+										<a style="padding-inline: 10px;" href="?page={{ paginator.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">  <span class="material-icons" style="color: crimson;">keyboard_double_arrow_right</span>  </a>
+									{% endif %}
+							{% endif %}
+							</h3>
+						</div>
+						<div class="clearfix"> </div>
+					</div>
+					<div class="row w3ls_mobiles_grid_right_grid3 mt-5">
+						{% for item in products_row_1 %}
+						<div class="col-md-4 agileinfo_new_products_grid agileinfo_new_products_grid_mobiles">
+							<div class="agile_ecommerce_tab_left mobiles_grid">
+								<div class="hs-wrapper hs-wrapper2">
+									<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+									{% for n in item_image %}
+										{% if n.name == item %}
+									<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% endif %}
+									{% endfor %}
+									<div class="w3_hs_bottom w3_hs_bottom_sub1">
+										<ul>
+											<li>
+												<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal17' '#myModal18' '#myModal19' %}"><i
+														class="fas fa-eye"></i></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<h5><a href="{% url 'detailspage' item.slug %}#product-detai;">{{ item.name }}</a></h5>
+								<div class="simpleCart_shelfItem">
+									{% with price=item.price discount=item.discount %}
+									<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+									<form action="#" method="post">
+										<input type="hidden" name="cmd" value="_cart" />
+										<input type="hidden" name="add" value="1" />
+										<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+										<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+										<button type="submit" class="w3ls-cart">Add to cart</button>
+									</form>
+								</div>
+								<div class="mobiles_grid_pos">
+									<h6>New</h6>
+								</div>
+							</div>
+						</div>
+						<!-- modal-card -->
+						<div class="modal fade" id="{% cycle 'myModal17' 'myModal18' 'myModal19' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="row modal-body">
+										<div class="col-md-5 modal_body_left">
+											<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										</div>
+										<div class="col-md-7 modal_body_right">
+											<h4>{{ item.name }}</h4>
+											<p>{{ item.description }}</p>
+											<div class="modal_body_right_cart simpleCart_shelfItem">
+												<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+												<form action="#" method="post">
+													<input type="hidden" name="cmd" value="_cart">
+													<input type="hidden" name="add" value="1">
+													<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+													<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+													<button type="submit" class="w3ls-cart">Add to cart</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end modal -->
+								{% endwith %}
+						{% empty %}
+						<h2><span style="color: crimson; text-align: center;">Sorry the product does not exist or must have been removed</span></h2>
+						{% endfor %}
+					</div>
+					<div class="row w3ls_mobiles_grid_right_grid3 mt-5">
+						{% for item in products_row_2 %}
+						<div class="col-md-4 agileinfo_new_products_grid agileinfo_new_products_grid_mobiles">
+							<div class="agile_ecommerce_tab_left mobiles_grid">
+								<div class="hs-wrapper hs-wrapper2">
+									<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+									{% for n in item_image %}
+										{% if n.name == item %}
+									<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% endif %}
+									{% endfor %}
+									<div class="w3_hs_bottom w3_hs_bottom_sub1">
+										<ul>
+											<li>
+												<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal20' '#myModal21' '#myModal22' %}"><i
+														class="fas fa-eye"></i></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+								<div class="simpleCart_shelfItem">
+									{% with price=item.price discount=item.discount %}
+									<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+									<form action="#" method="post">
+										<input type="hidden" name="cmd" value="_cart" />
+										<input type="hidden" name="add" value="1" />
+										<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+										<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+										<button type="submit" class="w3ls-cart">Add to cart</button>
+									</form>
+								</div>
+								<div class="mobiles_grid_pos">
+									<h6>New</h6>
+								</div>
+							</div>
+						</div>
+						<!-- modal-card -->
+						<div class="modal fade" id="{% cycle 'myModal20' 'myModal21' 'myModal22' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="row modal-body">
+										<div class="col-md-5 modal_body_left">
+											<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										</div>
+										<div class="col-md-7 modal_body_right">
+											<h4>{{ item.name }}</h4>
+											<p>{{ item.description }}</p>
+											<div class="modal_body_right_cart simpleCart_shelfItem">
+												<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+												<form action="#" method="post">
+													<input type="hidden" name="cmd" value="_cart">
+													<input type="hidden" name="add" value="1">
+													<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+													<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+													<button type="submit" class="w3ls-cart">Add to cart</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end modal -->
+								{% endwith %}
+						{% endfor %}
+					</div>
+					<div class="row w3ls_mobiles_grid_right_grid3 mt-5">
+						{% for item in products_row_3 %}
+						<div class="col-md-4 agileinfo_new_products_grid agileinfo_new_products_grid_mobiles">
+							<div class="agile_ecommerce_tab_left mobiles_grid">
+								<div class="hs-wrapper hs-wrapper2">
+									<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+									{% for n in item_image %}
+										{% if n.name == item %}
+									<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
+										{% endif %}
+									{% endfor %}
+									<div class="w3_hs_bottom w3_hs_bottom_sub1">
+										<ul>
+											<li>
+												<a href="#modal" data-bs-toggle="modal" data-bs-target="{% cycle '#myModal23' '#myModal24' '#myModal25' %}"><i
+														class="fas fa-eye"></i></a>
+											</li>
+										</ul>
+									</div>
+								</div>
+								<h5><a href="{% url 'detailspage' item.slug %}#product-detail">{{ item.name }}</a></h5>
+								<div class="simpleCart_shelfItem">
+									{% with price=item.price discount=item.discount %}
+									<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+									<form action="#" method="post">
+										<input type="hidden" name="cmd" value="_cart" />
+										<input type="hidden" name="add" value="1" />
+										<input type="hidden" name="w3ls_item" value="{{ item.name }}" />
+										<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+										<button type="submit" class="w3ls-cart">Add to cart</button>
+									</form>
+								</div>
+								<div class="mobiles_grid_pos">
+									<h6>New</h6>
+								</div>
+							</div>
+						</div>
+						<!-- modal-card -->
+						<div class="modal fade" id="{% cycle 'myModal23' 'myModal24' 'myModal25' %}" tabindex="-1" aria-labelledby="myModal" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered">
+								<div class="modal-content">
+									<div class="modal-header border-0">
+										<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+									</div>
+									<div class="row modal-body">
+										<div class="col-md-5 modal_body_left">
+											<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
+										</div>
+										<div class="col-md-7 modal_body_right">
+											<h4>{{ item.name }}</h4>
+											<p>{{ item.description }}</p>
+											<div class="modal_body_right_cart simpleCart_shelfItem">
+												<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+												<form action="#" method="post">
+													<input type="hidden" name="cmd" value="_cart">
+													<input type="hidden" name="add" value="1">
+													<input type="hidden" name="w3ls_item" value="{{ item.name }}">
+													<input type="hidden" name="amount" value="{{ price|sub:discount }}">
+													<button type="submit" class="w3ls-cart">Add to cart</button>
+												</form>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- end modal -->
+								{% endwith %}
+						{% endfor %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+ 
+</div>
+{% endblock %}
+</body>
+</html>

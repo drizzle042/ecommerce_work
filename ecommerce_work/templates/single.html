@@ -1,0 +1,73 @@
+{% extends './base.html' %}
+{% load static %}
+{% load mathfilters %}
+<!doctype html>
+<html lang="en">
+<head>
+	{% block title %}<title>Grocery Mart -{{ detail.name }}</title>{% endblock %}
+</head>
+
+<body>
+	{% block content %}
+	<!-- banner -->
+	<div class="banner banner2">
+		<div class="container">
+			<h2>{{ detail.name }}</h2>
+		</div>
+	</div>
+	<!-- //banner -->
+	<!-- breadcrumbs -->
+	<div class="breadcrumb_dress">
+		<div class="container">
+			<ul id="product-detail">
+				<li><a href="{% url 'homepage' %}"><span class="glyphicon glyphicon-home" aria-hidden="true"></span> Home</a>
+					<i>/</i></li>
+				<li>{{ detail.name }}</li>
+			</ul>
+		</div>
+	</div>
+	<!-- //breadcrumbs -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+
+ 
+</div>
+	<!-- single -->
+	<div class="single py-5">
+		<div class="container py-lg-5 py-4">
+			<div class="row align-items-center">
+				<div class="col-lg-4 col-md-8 single-right-left ">
+					<img loading="lazy" importance="low" src="{{ detail.mainImage.url }}" data-imagezoom="true" class="img-fluid" alt="">
+				</div>
+				<div class="col-md-8 single-right">
+					<h3>{{ detail.name }}</h3>
+					<div class="description">
+						<h5><i>Description</i></h5>
+						<p>{{ detail.description }}</p>
+					</div>
+					<div class="simpleCart_shelfItem">
+						{% with price=detail.price discount=detail.discount %}
+						<p><span>${{ price }}</span> <i class="item_price">${{ price|sub:discount }}</i></p>
+						<form action="#" method="post">
+							<input type="hidden" name="cmd" value="_cart" />
+							<input type="hidden" name="add" value="1" />
+							<input type="hidden" name="w3ls_item" value="{{ detail.name }}" />
+							<input type="hidden" name="amount" value="{{ price|sub:discount }}" />
+							<button type="submit" class="w3ls-cart">Add to cart</button>
+						</form>
+						{% endwith %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- //single -->
+<div style="margin: 8px auto; display: block; text-align:center;">
+
+<!---728x90--->
+ 
+</div>
+	{% endblock %}
+</body>
+</html>
