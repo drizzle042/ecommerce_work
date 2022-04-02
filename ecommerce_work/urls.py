@@ -17,17 +17,24 @@ from django.contrib import admin
 from django.conf import settings
 from django.conf.urls.static import static
 from django.urls import path
-from . import views
+from .views import *
 
 urlpatterns = [
-    path('', views.home, name='homepage'),
-    path('about/', views.about, name='aboutpage'),
-    path('faq/', views.faqs, name='faqpage'),
-    path('contact_us/', views.contact, name='contactpage'),
-    path('details/<slug:slug>/', views.details, name='detailspage'),
+    path('', home, name='homepage'),
+    path('about/', about, name='aboutpage'),
+    path('faq/', faqs, name='faqpage'),
+    path('contact_us/', contact, name='contactpage'),
+    path("signup/", sign_up, name="signup_page"),
+    path("update-user/", update, name="updateview"),
+    path("signin/", sign_in, name="signin_page"),
+    path("signout/", sign_out, name="signout_page"),
+    path("dashboard", dashboard, name="dashboardpage"),
+    path('details/<slug:slug>/', details, name='detailspage'),
     path('admin/', admin.site.urls),
-    path('search/', views.search, name='searchpage'),
-    path('<slug:category>/', views.shop, name='shop_page'),
+    path('search/', search, name='searchpage'),
+    path("order-summary/", order_summary, name="order_summary_page_for_authenticated_users"),
+    path('add-to-cart/<pk>/', add_to_cart, name='add-to-cart'),
+    path('<slug:category>/', shop, name='shop_page'),
 ]
 
 if settings.DEBUG:

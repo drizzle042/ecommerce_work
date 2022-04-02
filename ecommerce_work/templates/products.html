@@ -8,6 +8,13 @@
 </head>
 
 <body>
+	{% block log %}
+		<!-- login -->
+		<div class="w3l_login">
+			<a href="{% url 'dashboardpage' %}"><i
+					class="fas fa-user"></i></a>
+		</div>
+	{% endblock %}
 	{% block content %}
 	<!-- banner -->
 	<div class="banner banner2">
@@ -75,7 +82,10 @@
 
 					<div class="w3ls_mobiles_grid_right_grid2">
 						<div class="w3ls_mobiles_grid_right_grid2_left">
-							<h3 style="white-space: nowrap;">Showing Results:{% if paginator.has_other_pages %}
+							<h3 style="white-space: nowrap;">Showing Results: </h3>
+							<br>
+							<h3>
+							{% if paginator.has_other_pages %}
 									{% if paginator.has_previous %}
 										<a style="padding-inline: 10px;" href="?page=
 												{{ paginator.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">  <span class="material-icons" style="color: crimson;">keyboard_double_arrow_left</span>  </a>

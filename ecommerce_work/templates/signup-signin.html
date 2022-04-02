@@ -1,0 +1,83 @@
+{% extends "./base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block title %}<title>Grocery Mart - Ecommerce Category Bootstrap Responsive Website Template - Sign In : W3Layouts</title>{% endblock %}
+</head>
+<body>
+	{% block log %}
+		<!-- login -->
+		<div class="w3l_login">
+            <a href="#myModal12" data-bs-toggle="modal" data-bs-target="#myModal12"><i
+                class="fas fa-user"></i></a>
+		</div>
+	{% endblock %}
+{% block content %}
+    
+	<!-- header modal -->
+    <div class="modal fade show" id="myModal12" tabindex="-1" aria-labelledby="myModal12" aria-modal="true" role="dialog" style="padding-right: 1px; display: block; padding-left: 0px;">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header border-0">
+					<button type="button" id="btn-close" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="row modal-body">
+					<ul class="nav nav-tabs mb-4" id="myTab" role="tablist" style="display: flex; justify-content: center;">
+						<li class="nav-item" role="presentation">
+							<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false">Login</button>
+						</li>
+						<li class="nav-item" role="presentation">
+							<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Register</button>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- header modal -->
+    <div class="tab-content p-0" id="myTabContent" style="max-width: 720px; margin: auto; margin-top: 20px; margin-bottom: 20px;">
+        <div class="tab-pane fade active show" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="register">
+                <form action="{% url 'signin_page' %}" method="post">
+                    {% csrf_token %}
+                    <input name="Email" placeholder="Email Address" type="email" required="">
+                    <input name="Password" placeholder="Password" type="password" required="">
+                    <div class="sign-up">
+                        <input type="submit" value="Sign in">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="register">
+                <form action="{% url 'signup_page' %}" method="post">
+                    {% csrf_token %}
+                    <input placeholder="Username" name="UserName" type="text" required="">
+                    <input placeholder="Email Address" name="Email" type="email" required="">
+                    <input placeholder="Password" name="Password" type="password" required="">
+                    <input placeholder="Confirm Password" name="Password2" type="password" required="">
+                    <p>You can fill these fields later</p>
+                    <input placeholder="First name" name="FirstName" type="text">
+                    <input placeholder="Last name" name="LastName" type="text">
+                    <div class="sign-up">
+                        <input type="submit" value="Create Account">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        var btn = document.getElementById("btn-close")
+        var modal = document.getElementById("myModal12")
+        function close(){
+            modal.style.display = "none";
+        }
+        btn.addEventListener("click", close)
+    </script>
+{% endblock %}
+</body>
+</html>

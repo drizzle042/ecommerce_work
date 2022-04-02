@@ -199,11 +199,7 @@ RIGHT SIDEBAR TOGGLE SECTION
 	<div class="header" id="home1">
 		<div class="container">
 			<div class="d-flex align-items-center justify-content-between">
-				<!-- login -->
-				<div class="w3l_login">
-					<a href="#myModal12" data-bs-toggle="modal" data-bs-target="#myModal12"><i
-							class="fas fa-user"></i></a>
-				</div>
+				{% block log %}{% endblock %}
 				<!-- logo -->
 				<div class="w3l_logo text-center ml-auto">
 					<h1><a href="{% url 'homepage' %}">Grocery Mart<span>Online Grocery Shopping</span></a></h1>
@@ -240,55 +236,6 @@ RIGHT SIDEBAR TOGGLE SECTION
 		</div>
 	</div>
 	<!-- //top header -->
-	<!-- header modal -->
-	<div class="modal fade" id="myModal12" tabindex="-1" aria-labelledby="myModal12" aria-hidden="true">
-		<div class="modal-dialog modal-dialog-centered">
-			<div class="modal-content">
-				<div class="modal-header border-0">
-					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-				</div>
-				<div class="row modal-body">
-					<ul class="nav nav-tabs mb-4" id="myTab" role="tablist">
-						<li class="nav-item" role="presentation">
-							<button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home"
-								type="button" role="tab" aria-controls="home" aria-selected="true">Login</button>
-						</li>
-						<li class="nav-item" role="presentation">
-							<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile"
-								type="button" role="tab" aria-controls="profile" aria-selected="false">Register</button>
-						</li>
-					</ul>
-					<div class="tab-content p-0" id="myTabContent">
-						<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
-							<div class="register">
-								<form action="#" method="post">
-									<input name="Email" placeholder="Email Address" type="text" required="">
-									<input name="Password" placeholder="Password" type="password" required="">
-									<div class="sign-up">
-										<input type="submit" value="Sign in">
-									</div>
-								</form>
-							</div>
-						</div>
-						<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-							<div class="register">
-								<form action="#" method="post">
-									<input placeholder="Name" name="Name" type="text" required="">
-									<input placeholder="Email Address" name="Email" type="email" required="">
-									<input placeholder="Password" name="Password" type="password" required="">
-									<input placeholder="Confirm Password" name="Password" type="password" required="">
-									<div class="sign-up">
-										<input type="submit" value="Create Account">
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- header modal -->
 
 	<!-- header -->
 	<header id="site-header" class="fixed-top">
@@ -444,13 +391,6 @@ RIGHT SIDEBAR TOGGLE SECTION
 						</ul>
 					</div>
 				</div>
-			</div>
-		</div>
-		<div class="footer-copy mt-4">
-			<div class="container">
-				<p class="copy-text">&copy; 2021 Grocery Mart. All rights reserved. Design by <a
-						href="https://w3layouts.com/" target="_blank">W3Layouts</a>
-				</p>
 			</div>
 		</div>
 	</div>

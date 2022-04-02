@@ -1,0 +1,316 @@
+﻿{% extends "./base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    {% block title %}
+    <title>Dashboard</title>
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static '/css/main.css' %}" fetchpriority="high" importance="urgent"/>
+    {% endblock %}
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+	{% block log %}
+		<!-- login -->
+		<div class="w3l_login">
+			<a href="{% url 'dashboardpage' %}"><i
+					class="fas fa-user"></i></a>
+		</div>
+	{% endblock %}
+{% block content %}
+    <main class="main">
+        <section class="pt-150 pb-150">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-10 m-auto">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="dashboard-menu">
+                                    <ul class="nav flex-column" role="tablist">
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link" id="account-detail-tab" data-bs-toggle="tab" href="#account-detail" role="tab" aria-controls="account-detail" aria-selected="true"><i class="fi-rs-user mr-10"></i>Account details</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a style="color: gray;" class="nav-link" href="{% url 'signout_page' %}"><i class="fi-rs-sign-out mr-10"></i>Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="tab-content dashboard-content">
+                                    <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 style="color: gray;" class="mb-0">Hello {{ user.username | title }}</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p style="color: gray;">From your account dashboard. you can easily check &amp; view your <a href="#" class="recent-order-caller">recent orders</a>, manage your <a href="#" class="update-account">shipping and billing addresses</a> and <a href="#" class="update-account">edit your password and account details.</a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 class="mb-0" style="color: gray;" style="color: gray;">Your Orders</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="color: gray;">Order</th>
+                                                                <th style="color: gray;">Date</th>
+                                                                <th style="color: gray;">Status</th>
+                                                                <th style="color: gray;">Total</th>
+                                                                <th style="color: gray;">Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td style="color: gray;">#1357</td>
+                                                                <td style="color: gray;">March 45, 2020</td>
+                                                                <td style="color: gray;">Processing</td>
+                                                                <td style="color: gray;">$125.00 for 2 item</td>
+                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: gray;">#2468</td>
+                                                                <td style="color: gray;">June 29, 2020</td>
+                                                                <td style="color: gray;">Completed</td>
+                                                                <td style="color: gray;">$364.00 for 5 item</td>
+                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td style="color: gray;">#2366</td>
+                                                                <td style="color: gray;">August 02, 2020</td>
+                                                                <td style="color: gray;">Completed</td>
+                                                                <td style="color: gray;">$280.00 for 3 item</td>
+                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 style="color: gray;" class="mb-0">Orders tracking</h5>
+                                            </div>
+                                            <div class="card-body contact-from-area">
+                                                <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
+                                                <div class="row">
+                                                    <div class="col-lg-8">
+                                                        <form class="contact-form-style mt-30 mb-50" action="#" method="post">
+                                                            <div class="input-style mb-20">
+                                                                <label>Order ID</label>
+                                                                <input name="order-id" placeholder="Found in your order confirmation email" type="text" class="square">
+                                                            </div>
+                                                            <div class="input-style mb-20">
+                                                                <label>Billing email</label>
+                                                                <input name="billing-email" placeholder="Email you used during checkout" type="email" class="square">
+                                                            </div>
+                                                            <button class="submit submit-auto-width" type="submit">Track</button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="address" role="tabpanel" aria-labelledby="address-tab">
+                                        <div class="row">
+                                            <div class="col-lg-6">
+                                                <div class="card mb-3 mb-lg-0">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0" style="color: gray;">Billing Address</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address style="color: gray;">{{ user.billing_address }}</address>
+                                                        <p style="color: gray;">{{ user.state }}</p>
+                                                        <a href="#" class="btn-small update-account">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="card">
+                                                    <div class="card-header">
+                                                        <h5 class="mb-0" style="color: gray;">Shipping Address</h5>
+                                                    </div>
+                                                    <div class="card-body">
+                                                        <address style="color: gray;">{{ user.billing_address }}</address>
+                                                        <p style="color: gray;">{{ user.state }}</p>
+                                                        <a href="#" class="btn-small update-account">Edit</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="account-detail" role="tabpanel" aria-labelledby="account-detail-tab">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h5 style="color: gray;">Account Details</h5>
+                                            </div>
+                                            <div class="card-body">
+                                                <p style="color: gray;">Do you want to update your account details</p>
+                                                <form method="post" action="{% url 'updateview' %}">
+                                                    {% csrf_token %}
+                                                    <div class="row">
+                                                        <div class="form-group col-md-6">
+                                                            <label>First Name <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.first_name }}" required="" class="form-control square" name="FirstName" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-6">
+                                                            <label>Last Name <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.last_name }}" required="" class="form-control square" name="LastName">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>User Name <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.username }}" required="" class="form-control square" name="UserName" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Email Address <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.email }}" required="" class="form-control square" name="Email" type="email">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Billing Address <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.billing_address }}" required="" class="form-control square" name="BillingAddress" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>State <span class="required">*</span></label>
+                                                            <input placeholder="{{ user.state }}" required="" class="form-control square" name="State" type="text">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label id="password-edit">Current Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="CurrentPassword" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>New Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="Password" type="password">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Confirm Password <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="Password2" type="password">
+                                                        </div>
+                                                        <div class="col-md-12">
+                                                            <button type="submit" class="btn btn-fill-out submit" name="submit" value="Submit">Save</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Now Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor JS-->
+    <script src="{% static '/js/vendor/modernizr-3.6.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '/js/plugins/slick.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.syotimer.min.js' %}"></script>
+    <script src="{% static '/js/plugins/wow.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery-ui.js' %}"></script>
+    <script src="{% static '/js/plugins/perfect-scrollbar.js' %}"></script>
+    <script src="{% static '/js/plugins/magnific-popup.js' %}"></script>
+    <script src="{% static '/js/plugins/select2.min.js' %}"></script>
+    <script src="{% static '/js/plugins/waypoints.js' %}"></script>
+    <script src="{% static '/js/plugins/counterup.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.countdown.min.js' %}"></script>
+    <script src="{% static '/js/plugins/images-loaded.js' %}"></script>
+    <script src="{% static '/js/plugins/isotope.js' %}"></script>
+    <script src="{% static '/js/plugins/scrollup.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.vticker-min.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.theia.sticky.js' %}"></script>
+    <!-- Template  JS -->
+    <script src="{% static '/js/main.js' %}"></script>
+    <script>
+        function show(){
+            var accountTab = document.getElementById("account-detail-tab");
+            accountTab.classList.add("active");
+            var accountTabPane = document.getElementById("account-detail");
+            accountTabPane.classList.add("active");
+            accountTabPane.classList.add("show");
+
+            var addressTab = document.getElementById("address-tab");
+            addressTab.classList.remove("active");
+            var addressTabPane = document.getElementById("address");
+            addressTabPane.classList.remove("active");
+            addressTabPane.classList.remove("show");
+
+            var dashboardTab = document.getElementById("dashboard-tab");
+            dashboardTab.classList.remove("active");
+            var dashboardTabPane = document.getElementById("dashboard");
+            dashboardTabPane.classList.remove("active");
+            dashboardTabPane.classList.remove("show");
+        }
+        var eventCallers = document.querySelectorAll(".update-account");
+        for (var i of eventCallers){
+            i.addEventListener("click", show)
+        }
+
+        function showOrder(){
+            var ordersTab = document.getElementById("orders-tab");
+            ordersTab.classList.add("active");
+            var ordersTabPane = document.getElementById("orders");
+            ordersTabPane.classList.add("active");
+            ordersTabPane.classList.add("show");
+
+            var addressTab = document.getElementById("address-tab");
+            addressTab.classList.remove("active");
+            var addressTabPane = document.getElementById("address");
+            addressTabPane.classList.remove("active");
+            addressTabPane.classList.remove("show");
+
+            var dashboardTab = document.getElementById("dashboard-tab");
+            dashboardTab.classList.remove("active");
+            var dashboardTabPane = document.getElementById("dashboard");
+            dashboardTabPane.classList.remove("active");
+            dashboardTabPane.classList.remove("show");
+        }
+        var eventCaller = document.querySelector(".recent-order-caller");
+        eventCaller.addEventListener("click", showOrder)
+    </script>
+{% endblock %}
+</body>
+
+</html>
