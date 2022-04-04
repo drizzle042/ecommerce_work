@@ -1,13 +1,12 @@
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import redirect, render
 from django.db.models.query_utils import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.core.exceptions import ObjectDoesNotExist
 from dbmodels.models import *
-from django.utils import timezone
 
 products = Product.objects.all()
 
@@ -115,20 +114,16 @@ def sign_up(request):
                 user.state = state
                 user.save()
                 messages.success(request, "Success")
-                print("Success")  
                 
                 return redirect("dashboardpage") 
             else:
                 messages.error(request, "Sorry the email already exists in our database")
-                print("Sorry the email already exists in our database")
                 return redirect("homepage")
         elif len(password) < 8:
             messages.error(request, "Please make sure your password is above 8 (eight) characters long!")
-            print("Please make sure your password is above 8 (eight) characters long!")
             return redirect("homepage")
         else:
             messages.error(request, "Your passwords do not match!")
-            print("Your passwords do not match!")
             return redirect("homepage")
     else:
         return redirect("homepage")
@@ -159,20 +154,16 @@ def update(request):
                 user.set_password(passcode)
                 user.save()
                 messages.success(request, "Success")
-                print("Success")  
                 
                 return redirect("dashboardpage") 
             else:
                 messages.error(request, f"Wrong email: {email}, or password! \n Please review...")
-                print(f"Wrong email: {email}, or password! \n Please review...")
                 return redirect("dashboardpage")
         elif len(password) < 8:
             messages.error(request, "Please make sure your password is above 8 (eight) characters long!")
-            print("Please make sure your password is above 8 (eight) characters long!")
             return redirect("dashboardpage")
         else:
             messages.error(request, "Your passwords do not match!")
-            print("Your passwords do not match!")
             return redirect("dashboardpage")
     else:
         return redirect("dashboardpage")
@@ -200,76 +191,62 @@ def sign_out(request):
 
 @login_required
 def dashboard(request):
+    
+    cart = CartItem.objects.filter(user=request.user, has_ordered=False)
+
     context = {
-        "user": request.user
+        "user": request.user,
+        "cart": cart,
     }
     return render(request, "./dashboard.html", context)
 
+@csrf_exempt
 @login_required
-def order_summary(request):
-    if request.user.is_authenticated:
-        try:
-            order = Order.objects.get(user=request.user, ordered=False)
-            context = {
-                "object": order
-            }
-            return render(request, "./order_summary.html", context)
-
-        except ObjectDoesNotExist:
-            return redirect("/")
-    else:
-        return render(request, "./order_summary.html")
+def add_to_cart(request):
+    query = request.POST.getlist("cart_item")
+    quantity_amount = request.POST.getlist("quantity_amount")
+    for (i, n) in zip(query, quantity_amount):
+        item = Product.objects.get(name=i)
+        order_item, created = CartItem.objects.get_or_create(
+            item = item,
+            user = request.user,
+            has_ordered = False
+        )
+        num = int(n) - 1
+        order_item.quantity += num
+        order_item.save()
+        messages.success(request, f"{order_item.item} added to cart!")
+    return redirect("dashboardpage")
 
 @login_required
-def add_to_cart(request, slug):
-    item = get_object_or_404(Product, slug=slug)
-    order_item, created = OrderItem.objects.get_or_create(
-        item = item,
-        user = request.user,
-        ordered = False
+def remove_from_cart(request):
+    slug = request.POST["delete"]
+    item = Product.objects.get(slug=slug)
+    cart_item_to_remove = CartItem.objects.get(
+            item = item,
+            user = request.user,
+            has_ordered = False
+        )
+    cart_item_to_remove.delete()
+    messages.info(request, f"Item '{item}' removed from your cart")
+    return redirect("dashboardpage")
+
+@login_required        
+def reduce_quantity_item(request):
+    slug = request.POST["reduce"]
+    item = Product.objects.get(slug=slug)
+    order_item = CartItem.objects.get(
+        item=item,
+        user=request.user,
+        has_ordered=False
     )
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-
-    if order_qs.exists():
-        order = order_qs[0]
-
-        if order.items.filter(item__pk=item.pk).exists():
-            order_item.quantity += 1
-            order_item.save()
-            return redirect("order_summary_page_for_authenticated_users")
-        else:
-            order.items.add(order_item)
-            return redirect("order_summary_page_for_authenticated_users")
+    if order_item.quantity > 1:
+        order_item.quantity -= 1
+        order_item.save()
     else:
-        ordered_date = timezone.now()
-        order = Order.objects.create(user=request.user, ordered_date=ordered_date)
-        order.items.add(order_item)
-        return redirect("order_summary_page_for_authenticated_users")
-
-@login_required
-def remove_from_cart(request, slug):
-    item = get_object_or_404(Product, slug=slug)
-    order_qs = Order.objects.filter(
-        user=request.user, 
-        ordered=False
-    )
-    if order_qs.exists():
-        order = order_qs[0]
-        if order.items.filter(item__pk=item.pk).exists():
-            order_item = OrderItem.objects.filter(
-                item=item,
-                user=request.user,
-                ordered=False
-            )[0]
-            order_item.delete()
-            messages.info(request, "Item \""+order_item.item.item_name+"\" remove from your cart")
-            return redirect("order_summary_page_for_authenticated_users")
-        else:
-            messages.info(request, "This Item not in your cart")
-            return redirect("detailspage", slug=slug)
-    else:
-        messages.info(request, "You do not have an Order")
-        return redirect("detailspage", slug=slug)
+        order_item.delete()
+    messages.info(request, "Your cart has been updated!")
+    return redirect("dashboardpage")
 
 def about(request):
     return render(request, './about.html')

@@ -238,6 +238,29 @@ RIGHT SIDEBAR TOGGLE SECTION
 	<!-- //top header -->
 
 	<!-- header -->
+	{% if messages %}
+		{% for message in messages %}
+			<div class="{{ message.tags }}-messages messages-block" style="
+															display: flex; 
+															justify-content: space-between; 
+															margin: auto; margin-top: 5px; 
+															max-width: 500px;
+															padding: 5px;
+															border: 1px solid rgb(255, 255, 255);
+															border-radius: 8px;">
+				<p style="font-weight: bold; text-align: center; width: 85%; color: white; font-family: Arial, Helvetica, sans-serif;">{{ message }}</p>
+				<span style="cursor: pointer; color: white;" class="material-icons messagesBlockCloser">highlight_off</span>
+			</div>
+			<script>
+				var closer = document.querySelectorAll(".messagesBlockCloser");
+				for (var n of closer){
+					const msgBlock = n.parentElement;
+					n.addEventListener("click", () => {
+						msgBlock.style.display = "none";
+				})};
+			</script>
+		{% endfor %}
+	{% endif %}
 	<header id="site-header" class="fixed-top">
 		<div class="container">
 			<nav class="navbar navbar-expand-lg navbar-light">

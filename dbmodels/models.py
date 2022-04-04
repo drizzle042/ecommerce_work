@@ -78,7 +78,7 @@ class Product_image(models.Model):
     def __str__(self) -> str:
         return self.name.name
 
-class OrderItem(models.Model):
+class CartItem(models.Model):
     user = models.ForeignKey(to=get_user_model(), on_delete=CASCADE)
     item = models.ForeignKey(to=Product, on_delete=CASCADE)
     has_ordered = models.BooleanField(default=False)
@@ -101,7 +101,7 @@ class OrderItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(to=get_user_model(), on_delete=CASCADE)
-    items = models.ManyToManyField(OrderItem)
+    items = models.ManyToManyField(CartItem)
     start_date = models.DateTimeField(auto_now_add=True)
     ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)

@@ -32,9 +32,10 @@ urlpatterns = [
     path('details/<slug:slug>/', details, name='detailspage'),
     path('admin/', admin.site.urls),
     path('search/', search, name='searchpage'),
-    path("order-summary/", order_summary, name="order_summary_page_for_authenticated_users"),
-    path('add-to-cart/<pk>/', add_to_cart, name='add-to-cart'),
-    path('<slug:category>/', shop, name='shop_page'),
+    path('add-to-cart/', add_to_cart, name='add_to_cart'),
+    path("delete/", remove_from_cart, name="delete_from_cart"),
+    path("reduce/", reduce_quantity_item, name="reduce_item"),
+    path('shop/<slug:category>/', shop, name='shop_page'),
 ]
 
 if settings.DEBUG:

@@ -37,10 +37,10 @@
                                             <a style="color: gray;" class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a style="color: gray;" class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Orders</a>
+                                            <a style="color: gray;" class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false"><i class="fi-rs-shopping-bag mr-10"></i>Cart</a>
                                         </li>
                                         <li class="nav-item">
-                                            <a style="color: gray;" class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Track Your Order</a>
+                                            <a style="color: gray;" class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false"><i class="fi-rs-shopping-cart-check mr-10"></i>Your Orders</a>
                                         </li>
                                         <li class="nav-item">
                                             <a style="color: gray;" class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true"><i class="fi-rs-marker mr-10"></i>My Address</a>
@@ -69,42 +69,32 @@
                                     <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 class="mb-0" style="color: gray;" style="color: gray;">Your Orders</h5>
+                                                <h5 class="mb-0" style="color: gray;" style="color: gray;">Cart</h5>
                                             </div>
                                             <div class="card-body">
                                                 <div class="table-responsive">
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th style="color: gray;">Order</th>
-                                                                <th style="color: gray;">Date</th>
-                                                                <th style="color: gray;">Status</th>
-                                                                <th style="color: gray;">Total</th>
+                                                                <th style="color: gray;">Item</th>
+                                                                <th style="color: gray;">Delete</th>
+                                                                <th style="color: gray;">Quantity</th>
+                                                                <th style="color: gray;">Total Price</th>
                                                                 <th style="color: gray;">Actions</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
+                                                            {% for item in cart %}
                                                             <tr>
-                                                                <td style="color: gray;">#1357</td>
-                                                                <td style="color: gray;">March 45, 2020</td>
-                                                                <td style="color: gray;">Processing</td>
-                                                                <td style="color: gray;">$125.00 for 2 item</td>
-                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                                <td style="color: gray;">#{{ item.item }}</td>
+                                                                <td style="color: gray;"><form action="{% url 'delete_from_cart' %}" method="post">{% csrf_token %}<input type="hidden" name="delete" value="{{ item.item.slug }}"><input type="submit" value="Delete"></form></td>
+                                                                <td style="color: gray;">{% if item.quantity %}<form action="{% url 'reduce_item' %}" method="post">{% csrf_token %}<div style="display: flex; justify-content: space-evenly;"><input type="hidden" name="reduce" value="{{ item.item.slug }}"><button type="submit" style="border: none; background-color: transparent;"><span class="material-icons">remove_circle</span></button><b>{{ item.quantity }}</b></div></form>{% else %} <h1>---</h1>{% endif %} </td>
+                                                                <td style="color: gray;">{% if item.get_total_final_price %} <b>$</b>{{ item.get_total_final_price }}{% else %} <h1>---</h1>{% endif %}</td>
+                                                                <td style="color: gray;">{% if item.has_ordered %} <em>Ordered</em> {% else %} Buy {% endif %}</td>
                                                             </tr>
-                                                            <tr>
-                                                                <td style="color: gray;">#2468</td>
-                                                                <td style="color: gray;">June 29, 2020</td>
-                                                                <td style="color: gray;">Completed</td>
-                                                                <td style="color: gray;">$364.00 for 5 item</td>
-                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td style="color: gray;">#2366</td>
-                                                                <td style="color: gray;">August 02, 2020</td>
-                                                                <td style="color: gray;">Completed</td>
-                                                                <td style="color: gray;">$280.00 for 3 item</td>
-                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
-                                                            </tr>
+                                                            {% empty %}
+                                                            <tr><p>You have not ordered anything yet. Why not go over to your cart and place an order? <a href="{% url 'shop_page' 'fashion' %}"></a></p></tr>
+                                                            {% endfor %}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -114,24 +104,34 @@
                                     <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
                                         <div class="card">
                                             <div class="card-header">
-                                                <h5 style="color: gray;" class="mb-0">Orders tracking</h5>
+                                                <h5 style="color: gray;" class="mb-0">Orders</h5>
                                             </div>
-                                            <div class="card-body contact-from-area">
-                                                <p>To track your order please enter your OrderID in the box below and press "Track" button. This was given to you on your receipt and in the confirmation email you should have received.</p>
-                                                <div class="row">
-                                                    <div class="col-lg-8">
-                                                        <form class="contact-form-style mt-30 mb-50" action="#" method="post">
-                                                            <div class="input-style mb-20">
-                                                                <label>Order ID</label>
-                                                                <input name="order-id" placeholder="Found in your order confirmation email" type="text" class="square">
-                                                            </div>
-                                                            <div class="input-style mb-20">
-                                                                <label>Billing email</label>
-                                                                <input name="billing-email" placeholder="Email you used during checkout" type="email" class="square">
-                                                            </div>
-                                                            <button class="submit submit-auto-width" type="submit">Track</button>
-                                                        </form>
-                                                    </div>
+                                            <div class="card-body">
+                                                <div class="table-responsive">
+                                                    <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="color: gray;">Order</th>
+                                                                <th style="color: gray;">Status</th>
+                                                                <th style="color: gray;">Date</th>
+                                                                <th style="color: gray;">Total</th>
+                                                                <th style="color: gray;">Actions</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for order in orders.order %}
+                                                            <tr>
+                                                                <td style="color: gray;">#1</td>
+                                                                <td style="color: gray;">{% if order.ordered %}Ordered{% else %}<a href="#">Place Order</a>{% endif %}</td>
+                                                                <td style="color: gray;">{% if order.ordered %}{{ order.ordered_date }}{% endif %}</td>
+                                                                <td style="color: gray;">{{ order.get_total_price }}</td>
+                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                            </tr>
+                                                        {% empty %}
+                                                        <tr><p>You have not ordered anything yet. Why not go over to your cart and place an order? <a href="#"></a></p></tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
