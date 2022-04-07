@@ -1903,7 +1903,7 @@ var defaults = module.exports = {
 
     parent: (typeof document !== 'undefined') ? document.body : null,
 
-    action: "add-to-cart/",
+    action: "http://127.0.0.1:8000/add-to-cart/",
 
     target: '',
 

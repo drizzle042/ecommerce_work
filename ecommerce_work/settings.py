@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dbmodels',
     'mathfilters',
+    'gdstorage',
 ]
 
 MIDDLEWARE = [
@@ -87,6 +88,22 @@ DATABASES = {
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
 
 AUTH_USER_MODEL = "dbmodels.User"
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+DEFAULT_FROM_EMAIL = 'chukwujiobicanon@outlook.com'
+
+SERVER_EMAIL = 'chukwujiobicanon@outlook.com'
+
+EMAIL_HOST = 'outlook.office365.com'
+
+EMAIL_USE_TLS = True
+
+EMAIL_PORT = 993
+
+EMAIL_HOST_USER = 'chukwujiobicanon@outlook.com'
+
+EMAIL_PASSWORD = 'Keshadel1'
 
 LOGIN_REDIRECT_URL = "dashboardpage"
 
@@ -144,3 +161,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+GOOGLE_DRIVE_STORAGE_JSON_KEY_FILE = os.path.join(BASE_DIR, 'ecommerce_work/melissa-grocery-mart-storage-api-keys.json')

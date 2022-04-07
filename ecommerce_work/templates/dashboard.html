@@ -19,8 +19,8 @@
 	{% block log %}
 		<!-- login -->
 		<div class="w3l_login">
-			<a href="{% url 'dashboardpage' %}"><i
-					class="fas fa-user"></i></a>
+			<a href="{% url 'dashboardpage' %}">{% if user.profile_pic %}<img src="{{ user.profile_pic.url }}">{% else %}<i
+					class="fas fa-user"></i>{% endif %}</a>
 		</div>
 	{% endblock %}
 {% block content %}
@@ -31,7 +31,7 @@
                     <div class="col-lg-10 m-auto">
                         <div class="row">
                             <div class="col-md-4">
-                                <div class="dashboard-menu">
+                                <div class="dashboard-menu" style="margin-top: 10px;">
                                     <ul class="nav flex-column" role="tablist">
                                         <li class="nav-item">
                                             <a style="color: gray;" class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false"><i class="fi-rs-settings-sliders mr-10"></i>Dashboard</a>
@@ -55,7 +55,7 @@
                                 </div>
                             </div>
                             <div class="col-md-8">
-                                <div class="tab-content dashboard-content">
+                                <div class="tab-content dashboard-content" style="margin-top: 10px;">
                                     <div class="tab-pane fade active show" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
                                         <div class="card">
                                             <div class="card-header">
@@ -80,23 +80,30 @@
                                                                 <th style="color: gray;">Delete</th>
                                                                 <th style="color: gray;">Quantity</th>
                                                                 <th style="color: gray;">Total Price</th>
-                                                                <th style="color: gray;">Actions</th>
+                                                                <th style="color: gray;">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             {% for item in cart %}
                                                             <tr>
-                                                                <td style="color: gray;">#{{ item.item }}</td>
+                                                                <td style="color: gray;"><b>#{{ item.item }}</b></td>
                                                                 <td style="color: gray;"><form action="{% url 'delete_from_cart' %}" method="post">{% csrf_token %}<input type="hidden" name="delete" value="{{ item.item.slug }}"><input type="submit" value="Delete"></form></td>
-                                                                <td style="color: gray;">{% if item.quantity %}<form action="{% url 'reduce_item' %}" method="post">{% csrf_token %}<div style="display: flex; justify-content: space-evenly;"><input type="hidden" name="reduce" value="{{ item.item.slug }}"><button type="submit" style="border: none; background-color: transparent;"><span class="material-icons">remove_circle</span></button><b>{{ item.quantity }}</b></div></form>{% else %} <h1>---</h1>{% endif %} </td>
+                                                                <td style="color: gray;">{% if item.quantity %}<form action="{% url 'reduce_item' %}" method="post">{% csrf_token %}<div style="display: flex; justify-content: center;"><input type="hidden" name="reduce" value="{{ item.item.slug }}"><button type="submit" style="border: none; background-color: transparent;"><span class="material-icons" style="cursor: pointer; width: 80%; height: 80%; margin: auto;">remove_circle</span></button><b style="margin-left: 5px;">x{{ item.quantity }}</b></div></form>{% else %} <h1>---</h1>{% endif %} </td>
                                                                 <td style="color: gray;">{% if item.get_total_final_price %} <b>$</b>{{ item.get_total_final_price }}{% else %} <h1>---</h1>{% endif %}</td>
-                                                                <td style="color: gray;">{% if item.has_ordered %} <em>Ordered</em> {% else %} Buy {% endif %}</td>
+                                                                <td style="color: gray;">{% if item.has_ordered %} <em>Ordered</em> {% else %}Not yet ordered{% endif %}</td>
                                                             </tr>
                                                             {% empty %}
-                                                            <tr><p>You have not ordered anything yet. Why not go over to your cart and place an order? <a href="{% url 'shop_page' 'fashion' %}"></a></p></tr>
+                                                            <tr><p style="background-color: rgb(240, 72, 72); color: white; border: none; border-radius: 5px; padding-left: 5px;">You have not added anything to your cart yet. Why not go over to the   <a style="color: rgb(7, 39, 180);" href="{% url 'shop_page' 'fashion' %}"><b style="text-decoration: underline;">shop</b></a>  and get some stuff?</p></tr>
                                                             {% endfor %}
                                                         </tbody>
                                                     </table>
+                                                    <form action="{% url 'orderView' %}" method="post">
+                                                        {% csrf_token %}
+                                                        {% for item in cart %}
+                                                            <input type="hidden" name="order_now" value="{{ item.item.slug }}">
+                                                        {% endfor %}
+                                                        <input type="submit" {% if not cart %}disabled=""{% endif %} class="{% if cart %}make-order-function-caller-active{% else %}make-order-function-caller-inactive{% endif %}" style="border: none; border-radius: 5px;" value="Order now">
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
@@ -115,7 +122,7 @@
                                                                 <th style="color: gray;">Status</th>
                                                                 <th style="color: gray;">Date</th>
                                                                 <th style="color: gray;">Total</th>
-                                                                <th style="color: gray;">Actions</th>
+                                                                <th style="color: gray;">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -189,6 +196,10 @@
                                                         <div class="form-group col-md-12">
                                                             <label>Email Address <span class="required">*</span></label>
                                                             <input placeholder="{{ user.email }}" required="" class="form-control square" name="Email" type="email">
+                                                        </div>
+                                                        <div class="form-group col-md-12">
+                                                            <label>Profile picture <span class="required">*</span></label>
+                                                            <input required="" class="form-control square" name="ProfilePic" type="file" accept="image/png, image/jpeg" style="padding: auto; color: gray;">
                                                         </div>
                                                         <div class="form-group col-md-12">
                                                             <label>Billing Address <span class="required">*</span></label>

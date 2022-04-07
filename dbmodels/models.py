@@ -3,6 +3,10 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.deletion import CASCADE
 from django.shortcuts import reverse
+from gdstorage.storage import GoogleDriveStorage
+from datetime import datetime
+
+gd_storage = GoogleDriveStorage()
 
 # Create your models here.
 
@@ -13,6 +17,7 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=80, blank=True)
     billing_address = models.TextField(blank=True)
     state = models.CharField(max_length=80, blank=True)
+    profile_pic = models.ImageField(upload_to = "user_images/", storage = gd_storage, blank=True)
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
@@ -20,6 +25,7 @@ class User(AbstractUser):
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True, serialize=True)
+    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self) -> str:
         return self.email
@@ -47,7 +53,7 @@ class Product(models.Model):
     slug = models.SlugField(allow_unicode=True, unique=True, serialize=True)
     price = models.IntegerField(serialize=True)
     discount = models.IntegerField(blank=True, serialize=True, default=0)
-    mainImage = models.ImageField()
+    mainImage = models.ImageField(upload_to = "main_images/", storage = gd_storage)
     mainCategory = models.CharField(max_length=30, choices=mainCategoryChoices, serialize=True)
     subCategory = models.CharField(max_length=30, serialize=True)
     description = models.TextField(blank=True, help_text="Product details", serialize=True)
@@ -73,7 +79,7 @@ class Product(models.Model):
 
 class Product_image(models.Model):
     name = models.ForeignKey(to=Product, on_delete= CASCADE, serialize=True)
-    images = models.ImageField()
+    images = models.ImageField(upload_to = "other_images/", storage = gd_storage)
     
     def __str__(self) -> str:
         return self.name.name
@@ -103,7 +109,6 @@ class Order(models.Model):
     user = models.ForeignKey(to=get_user_model(), on_delete=CASCADE)
     items = models.ManyToManyField(CartItem)
     start_date = models.DateTimeField(auto_now_add=True)
-    ordered_date = models.DateTimeField()
     ordered = models.BooleanField(default=False)
 
     def get_total_price(self):
