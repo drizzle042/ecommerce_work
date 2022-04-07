@@ -1,10 +1,12 @@
 from django.shortcuts import redirect, render
+from django.conf import settings
 from django.db.models.query_utils import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from dbmodels.models import *
 
@@ -24,8 +26,30 @@ def home(request):
     }
     if request.method == "POST":
         email = request.POST["Email"]
-        Subscriber.objects.create(email=email)
-        return render(request, './index.html', context=context)
+        if not Subscriber.objects.filter(email = email).exists():
+            Subscriber.objects.create(email=email)
+            subscriber = Subscriber.objects.all().order_by("-date")[0]
+            subscriber_email = subscriber.email
+            print(subscriber_email)
+            subject = "Thank you for subscribing"
+            message = """
+            We are happy you are interested in our Products. We assure you the very best of all our quality products we have to offer \n
+            Our products are highly organic and made from purely quality stuff. You will witness this first hand.
+                    """
+            sender = settings.EMAIL_HOST_USER
+            recipient = [str(subscriber_email),]
+
+            send_mail(
+                subject=subject,
+                message=message,
+                from_email=sender,
+                recipient_list=recipient,
+                fail_silently=True
+            )
+        else:
+            pass
+        messages.info(request, f"Your email {email} has been successfully subscribed to our mailing list")
+        return redirect("homepage")
         
     else:
         return render(request, './index.html', context=context)
@@ -103,6 +127,11 @@ def sign_up(request):
             state = request.POST.get("State")
         else:
             state = ""
+
+        if request.POST.get("ProfilePic"):
+            profile_photo = request.POST.get("ProfilePic")
+        else:
+            profile_photo = ""
             
         if password == password2 and len(password) >= 8:
             passcode = password
@@ -112,6 +141,7 @@ def sign_up(request):
                 user.last_name = lastname
                 user.billing_address = billing_address
                 user.state = state
+                user.profile_pic = profile_photo
                 user.save()
                 messages.success(request, "Success")
                 
@@ -140,6 +170,7 @@ def update(request):
         lastname = request.POST.get("LastName")
         billing_address = request.POST.get("BillingAddress")
         state = request.POST.get("State")
+        profile_photo = request.POST.get("ProfilePic")
             
         if password == password2 and len(password) >= 8:
             passcode = password
@@ -151,6 +182,7 @@ def update(request):
                 user.email = email
                 user.billing_address = billing_address
                 user.state = state
+                user.profile_pic = profile_photo
                 user.set_password(passcode)
                 user.save()
                 messages.success(request, "Success")
@@ -186,14 +218,12 @@ def sign_in(request):
 @login_required
 def sign_out(request):
     logout(request)
-    messages.success(request, "Bye!")
+    messages.success(request, "Bye! see you later")
     return redirect("homepage")
 
 @login_required
 def dashboard(request):
-    
     cart = CartItem.objects.filter(user=request.user, has_ordered=False)
-
     context = {
         "user": request.user,
         "cart": cart,
@@ -246,6 +276,38 @@ def reduce_quantity_item(request):
     else:
         order_item.delete()
     messages.info(request, "Your cart has been updated!")
+    return redirect("dashboardpage")
+
+@login_required
+def order_view(request):
+    cart = CartItem.objects.filter(user=request.user, has_ordered=False)
+    if not Order.objects.filter(user=request.user, ordered = False).exists():
+        orders = Order.objects.create(user = request.user)
+        orders.items.add(*cart)
+        messages.info(request, "Go ahead and place your order below")
+    elif Order.objects.filter(user=request.user, ordered = False).exists():
+        orders = Order.objects.get(user = request.user )
+        orders.items.add(*cart)
+        messages.info(request, "Go ahead and place your order below")
+    else:
+        messages.info(request, "Go ahead and place your order below")
+
+    order_summary = Order.objects.all()
+    context = {
+        "user": request.user,
+        "orders": order_summary,
+    }
+    return render(request, "./order_summary.html", context)
+
+def transaction(request, slug):
+    orders = Order.objects.filter(user = request.user, ordered = False)
+    if slug == "success":
+        for i in orders:
+            i.ordered = True
+        messages.success(request, "Your orders have successfully been placed!")
+    else:
+        messages.error(request, "Your orders were not placed successfully, why not try again?")
+
     return redirect("dashboardpage")
 
 def about(request):

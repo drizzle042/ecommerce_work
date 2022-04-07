@@ -92,7 +92,7 @@
 								<div class="col-md-4 agile_ecommerce_tab_left">
 									<div class="hs-wrapper">
 										<img loading="lazy" importance="low" src="{{ item.mainImage.url }}" alt="{{ item.name }}" class="img-fluid" />
-										{% for n in vegetables_item_image%}
+										{% for n in vegetables_item_image %}
 											{% if n.name == item %}
 										<img loading="lazy" importance="low" src="{{ n.images.url }}" alt="{{ item.name }}" class="img-fluid" />
 											{% endif %}

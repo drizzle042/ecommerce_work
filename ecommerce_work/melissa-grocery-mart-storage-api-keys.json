@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "melissa-grocery-mart-storage-1",
+  "private_key_id": "5673df79ffe7ec91f5137af288cdcf477660ef5a",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDkbT6GUy8yHeHC\nC1MwkmxUrMFb3YCxAk5yAoETwoypZHmeVXaIOdw4k669Pqyd3GrVUmQnSpentQws\nKNAvMMN1HIIiqqzBGl7XUwBFUTrkOow86d4/+93HeZ6/lcPMjpmniD1/c+PyZDz2\n9tYt7WBbfjsP7dx7d1pdcPjg+G3boxR/tisIiKs2XYJfOf2DyNNppdsu5VIANKmk\n/bpcQFAftI4ztr4RWt7oP8JPLAbHBDAlr/h8C+o21O1R5ez821kG/IZxKyE9KNnM\nSifKQ/OTEHL5hPoa+8r7uu31hFDoVyXfVUlDkbVNJFASQb+SYjQsSnWuBwwuzXCE\nM4DuisxjAgMBAAECggEAPHewv/UgPreLTgcab/aqx6VtkAhsKy9Nnb+M9LKg8qxe\nx2ufM4OBiNaLQJxpLGavPyYOzhngWGxEOyJYrc1OSF+SEWQ10+5LodtebHsKyGS5\nP9y20SA2vrmyrMuT57/t69vUT7tZYY5oVwXTf5fhVIbvUpGoNmTLXoXr0/3fcu7S\nFJf1iPhQ9NRgBrUpukp6n5HNV7kv7M0he+idWks+wRBo531VQA/ziyqYqRDWIJTV\ntQ3LJN+9SvlT9f4+XwhIpe6ZBgogXxrViQ5hYkPoOpv1bXySjgTO5uq6CBwxz2yr\nSDtqMeTu65bnNwGkolx0AUQaBKRZlM46WNRGCfXCHQKBgQDyM0ORGod+xzZCo/Re\nY1fu3BAkHDnUV/RyRV/FipSfjMIxF0THCIgfs8bsswOLZnRVyvpr5KD8chx5u45X\nRMUe87ir3tqm8nTZTlfp/JIbG6+J8nGURGCXtRTaGUOx1S3/Jy2cVZPfD79q2D7H\nTqyf/RTk/y5tSyddCB+cmkIB9wKBgQDxcRRjPmvc41q8YmJtR9KS0S1f3r3xAe56\nEkzBfZKtVJdrxeNzyTLJbeqSQJwnZI+7CwZpMEe12oVs1N53i7R0yZcrKySyb6oo\nSphzOgJZSAe3FAvsUZR+pd6O4t4HOSLtrEIr6wBilFdJHQwK99LZmEt3e6TJKe+W\n/+EeC42t9QKBgFLjooMdfjOwP+ysqexHuYdgvxFsq4n1lA4rmexEUjsMdEVSvlIT\npGqdHz5QwazKopPeBLg6JbJf50juHHfXbFL8fD4t5czu+3iHbGUC8IngfsIKPD7O\n6/PfoERIEzfgSn6hTOXND+9uN0d8vHd/gGq8tZLtllkHOHCJYDA7Rs3fAoGBANHO\nh/7t4WFjmBeYDxwTi6LVbu6easQh/4/IkzaY3nsMxUB8B/k335A2md5ZktiQhG3v\nWLTTpZ0btVIrcN7FYh0SiPCUXyFH879rgyquQBhBhaLMIshK5BViIhJchsAUIIwU\nYrQzVHRVn7wDJ9HoJSu9Mec0ZLACZxb6aC9prsZ5AoGBALzifLBz23jyP+SrHdyq\nZTMsJbssr1BQCSjn1gFQ80DG635zD7I6/CMLxgqR8ivNJPsBZanUU4EulCTNnwrx\nwWvDwr6ya4obDSh/U/353VRsyqybcr3JV64SjjijWlhkXcupM/dNPGSYPayyIFKl\nMVNppK4xZbmU6iX5I5SrcKnI\n-----END PRIVATE KEY-----\n",
+  "client_email": "melissa-mart-storage-manager-1@melissa-grocery-mart-storage-1.iam.gserviceaccount.com",
+  "client_id": "102432372296554296658",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/melissa-mart-storage-manager-1%40melissa-grocery-mart-storage-1.iam.gserviceaccount.com"
+}

@@ -1,0 +1,170 @@
+﻿{% extends "./base.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+    <meta charset="utf-8">
+    {% block title %}
+    <title>Dashboard</title>
+    <!-- Template CSS -->
+    <link rel="stylesheet" href="{% static '/css/main.css' %}" fetchpriority="high" importance="urgent"/>
+    {% endblock %}
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+	{% block log %}
+		<!-- login -->
+		<div class="w3l_login">
+			<a href="{% url 'dashboardpage' %}">{% if user.profile_pic %}<img src="{{ user.profile_pic.url }}">{% else %}<i
+					class="fas fa-user"></i>{% endif %}</a>
+		</div>
+	{% endblock %}
+{% block content %}
+    <main class="main">
+        <section class="checkout-popup" style="margin: 30px;">
+            <div class="col-md-6" style="margin: auto;">
+                <div class="order_review">
+                    <div class="mb-20">
+                        <h4>Your Orders</h4>
+                    </div>
+                    <div class="table-responsive order_table text-center">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">Product</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for n in orders %}
+                                {% for item in n.items.all %}
+                                <tr>
+                                    <td class="image product-thumbnail"><a href="{% url 'detailspage' item.item.slug %}"><img loading="lazy" src="{{ item.item.mainImage.url }}" alt="{{ item.item.name }}" fetchpriority="low" importance="low"></a></td>
+                                    <td>
+                                        <span class="product-qty">x{{ item.quantity }}</span>
+                                    </td>
+                                    <td><b>$</b>{{ item.get_total_final_price }}</td>
+                                </tr>
+                                {% endfor %}
+                                <tr>
+                                    <th>SubTotal</th>
+                                    <td class="product-subtotal" colspan="2"><b>$</b>{{ n.get_total_price }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Shipping</th>
+                                    <td colspan="2"><em>Free Shipping</em></td>
+                                </tr>
+                                <tr>
+                                    <th>Total</th>
+                                    <td colspan="2" class="product-subtotal"><span class="font-xl text-brand fw-900"><b>$</b>{{ n.get_total_price }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <form id="paymentForm">
+                        <input required type="hidden" id="users-fullname" value="{{ user.first_name }} {{ user.last_name }}">
+                        <input required style="border-radius: 5px;" type="email" id="email-address" placeholder="Please input your email for payment notification"/>
+                        <input required type="hidden" id="order-amount-to-pay" value="{% for n in orders %}{{ n.get_total_price }}{% endfor %}" />
+                        <p style="display: flex; justify-content: flex-end;"><button class="btn btn-fill-out btn-block mt-30" style="border: 1px solid rgb(153, 255, 0);" type="submit" onclick="payWithPaystack()">Place order</button></p>
+                    </form>
+                    <div class="bt-1 border-color-1 mt-30 mb-30"></div>
+                    <div style="display: flex; justify-content: space-evenly;">
+                        <img style="width: 40px; height: 25px;" src="{% static 'images/pay1.png' %}" alt="master card">
+                        <img style="width: 40px; height: 25px;" src="{% static 'images/pay2.png' %}" alt="">
+                        <img style="width: 40px; height: 25px;" src="{% static 'images/pay3.png' %}" alt="">
+                        <img style="width: 25px; height: 25px;" src="{% static 'images/pay4.png' %}" alt="">
+                        <img style="width: 40px; height: 25px;" src="{% static 'images/pay5.png' %}" alt="">
+                    </div>
+                </div> 
+                  <script src="https://js.paystack.co/v1/inline.js"></script> 
+                  <script>
+                        const paymentForm = document.getElementById('paymentForm');
+                        function payWithPaystack(e) {
+                            e.preventDefault();
+                            let handler = PaystackPop.setup({
+                                key: 'pk_test_aab767b5e085e124359c9c330938be2f77e7f49c',
+                                email: document.getElementById("email-address").value,
+                                amount: document.getElementById("order-amount-to-pay").value * 100,
+                                label: document.getElementById("users-fullname").value,
+                                currency: "NGN",
+                                channels: ['card'],
+                                onClose: function(){
+                                alert('Window closed.');
+                                },
+                                callback: function(response){
+                                    let message = `Payment Reference: ${response.reference} complete!`;
+                                    alert(message);
+                                    () => {
+                                        fetch("https://api.paystack.co/transaction/verify/:reference"+ response.reference, {
+                                            method: "GET",
+                                            headers: {
+                                                "Authorization": "Bearer YOUR_SECRET_KEY",
+                                            },
+                                        })
+                                            .then(res => {
+                                                if(res.data.status === "success"){
+                                                    fetch(`http://127.0.0.1:8000/transaction/${res.data.status}`)
+                                                }
+                                            })
+                                                .catch(err => {
+                                                    alert(err.message + '!')
+                                                })
+                                        };
+                                },
+                                onClose: function() {
+                                alert('Transaction was not completed, window closed.');
+                                },
+                            });
+                            handler.openIframe();
+                        }
+                        paymentForm.addEventListener("submit", payWithPaystack, false);
+                  </script>
+            </div>
+        </section>
+    </main>
+    <!-- Preloader Start -->
+    <div id="preloader-active">
+        <div class="preloader d-flex align-items-center justify-content-center">
+            <div class="preloader-inner position-relative">
+                <div class="text-center">
+                    <h5 class="mb-5">Now Loading</h5>
+                    <div class="loader">
+                        <div class="bar bar1"></div>
+                        <div class="bar bar2"></div>
+                        <div class="bar bar3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor JS-->
+    <script src="{% static '/js/vendor/modernizr-3.6.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/jquery-3.6.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/jquery-migrate-3.3.0.min.js' %}"></script>
+    <script src="{% static '/js/vendor/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static '/js/plugins/slick.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.syotimer.min.js' %}"></script>
+    <script src="{% static '/js/plugins/wow.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery-ui.js' %}"></script>
+    <script src="{% static '/js/plugins/perfect-scrollbar.js' %}"></script>
+    <script src="{% static '/js/plugins/magnific-popup.js' %}"></script>
+    <script src="{% static '/js/plugins/select2.min.js' %}"></script>
+    <script src="{% static '/js/plugins/waypoints.js' %}"></script>
+    <script src="{% static '/js/plugins/counterup.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.countdown.min.js' %}"></script>
+    <script src="{% static '/js/plugins/images-loaded.js' %}"></script>
+    <script src="{% static '/js/plugins/isotope.js' %}"></script>
+    <script src="{% static '/js/plugins/scrollup.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.vticker-min.js' %}"></script>
+    <script src="{% static '/js/plugins/jquery.theia.sticky.js' %}"></script>
+    <!-- Template  JS -->
+    <script src="{% static '/js/main.js' %}"></script>
+{% endblock %}
+</body>
+
+</html>
