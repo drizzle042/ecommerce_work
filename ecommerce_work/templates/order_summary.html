@@ -66,7 +66,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <form id="paymentForm">
+                    <form action="#" id="paymentForm">
                         <input required type="hidden" id="users-fullname" value="{{ user.first_name }} {{ user.last_name }}">
                         <input required style="border-radius: 5px;" type="email" id="email-address" placeholder="Please input your email for payment notification"/>
                         <input required type="hidden" id="order-amount-to-pay" value="{% for n in orders %}{{ n.get_total_price }}{% endfor %}" />
@@ -93,31 +93,18 @@
                                 label: document.getElementById("users-fullname").value,
                                 currency: "NGN",
                                 channels: ['card'],
-                                onClose: function(){
-                                alert('Window closed.');
-                                },
                                 callback: function(response){
                                     let message = `Payment Reference: ${response.reference} complete!`;
+
+                                    function verification(reference){
+                                        location.assign(`http://127.0.0.1:8000/transaction/${reference}`)
+                                    };
+
+                                    verification(response.reference);
                                     alert(message);
-                                    () => {
-                                        fetch("https://api.paystack.co/transaction/verify/:reference"+ response.reference, {
-                                            method: "GET",
-                                            headers: {
-                                                "Authorization": "Bearer YOUR_SECRET_KEY",
-                                            },
-                                        })
-                                            .then(res => {
-                                                if(res.data.status === "success"){
-                                                    fetch(`http://127.0.0.1:8000/transaction/${res.data.status}`)
-                                                }
-                                            })
-                                                .catch(err => {
-                                                    alert(err.message + '!')
-                                                })
-                                        };
                                 },
                                 onClose: function() {
-                                alert('Transaction was not completed, window closed.');
+                                    alert('Transaction was not completed, window closed.');
                                 },
                             });
                             handler.openIframe();
@@ -166,5 +153,4 @@
     <script src="{% static '/js/main.js' %}"></script>
 {% endblock %}
 </body>
-
 </html>

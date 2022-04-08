@@ -6,9 +6,11 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from dbmodels.models import *
+import requests
+from datetime import datetime
 
 products = Product.objects.all()
 
@@ -39,13 +41,13 @@ def home(request):
             sender = settings.EMAIL_HOST_USER
             recipient = [str(subscriber_email),]
 
-            send_mail(
-                subject=subject,
-                message=message,
-                from_email=sender,
-                recipient_list=recipient,
-                fail_silently=True
+            email_sent = EmailMessage(
+                subject = subject,
+                body = message,
+                from_email = sender,
+                to = recipient,
             )
+            email_sent.send()
         else:
             pass
         messages.info(request, f"Your email {email} has been successfully subscribed to our mailing list")
@@ -78,6 +80,7 @@ def shop(request, category):
 def search(request):
     query = request.GET.get("search")
     if query is None or query == '':
+        messages.warning(request, f"Your searched for '{query}' which is empty. Please make a valid search")
         return redirect("homepage")
     else:
         postresult = products.filter(
@@ -143,7 +146,7 @@ def sign_up(request):
                 user.state = state
                 user.profile_pic = profile_photo
                 user.save()
-                messages.success(request, "Success")
+                messages.success(request, "We have Successfully signed you up!")
                 
                 return redirect("dashboardpage") 
             else:
@@ -170,7 +173,7 @@ def update(request):
         lastname = request.POST.get("LastName")
         billing_address = request.POST.get("BillingAddress")
         state = request.POST.get("State")
-        profile_photo = request.POST.get("ProfilePic")
+        profile_photo = request.FILES["ProfilePic"]
             
         if password == password2 and len(password) >= 8:
             passcode = password
@@ -182,11 +185,11 @@ def update(request):
                 user.email = email
                 user.billing_address = billing_address
                 user.state = state
-                user.profile_pic = profile_photo
+                UserImage.objects.get_or_create(user = request.user, profile_pic = profile_photo)
                 user.set_password(passcode)
                 user.save()
-                messages.success(request, "Success")
-                
+
+                messages.success(request, "We have Successfully updated your account!")
                 return redirect("dashboardpage") 
             else:
                 messages.error(request, f"Wrong email: {email}, or password! \n Please review...")
@@ -207,7 +210,7 @@ def sign_in(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, "Welcome back!")
+            messages.success(request, f"Welcome back {request.user.username}!")
             return redirect("dashboardpage")
         else:
             messages.error(request, "Please check your login details")
@@ -224,9 +227,17 @@ def sign_out(request):
 @login_required
 def dashboard(request):
     cart = CartItem.objects.filter(user=request.user, has_ordered=False)
+    orders = Order.objects.filter(user = request.user, ordered = True)
+    userimage = UserImage.objects.filter(user=request.user)
+    if userimage.exists():
+        user_profile_pic = userimage[0]
+    else:
+        user_profile_pic = None
     context = {
         "user": request.user,
+        "userimage": user_profile_pic,
         "cart": cart,
+        "orders": orders,
     }
     return render(request, "./dashboard.html", context)
 
@@ -258,23 +269,23 @@ def remove_from_cart(request):
             has_ordered = False
         )
     cart_item_to_remove.delete()
-    messages.info(request, f"Item '{item}' removed from your cart")
+    messages.error(request, f"{item} has been removed from your cart")
     return redirect("dashboardpage")
 
 @login_required        
 def reduce_quantity_item(request):
     slug = request.POST["reduce"]
     item = Product.objects.get(slug=slug)
-    order_item = CartItem.objects.get(
+    cart_item = CartItem.objects.get(
         item=item,
         user=request.user,
         has_ordered=False
     )
-    if order_item.quantity > 1:
-        order_item.quantity -= 1
-        order_item.save()
+    if cart_item.quantity > 1:
+        cart_item.quantity -= 1
+        cart_item.save()
     else:
-        order_item.delete()
+        cart_item.delete()
     messages.info(request, "Your cart has been updated!")
     return redirect("dashboardpage")
 
@@ -286,27 +297,46 @@ def order_view(request):
         orders.items.add(*cart)
         messages.info(request, "Go ahead and place your order below")
     elif Order.objects.filter(user=request.user, ordered = False).exists():
-        orders = Order.objects.get(user = request.user )
+        orders = Order.objects.get(user = request.user, ordered = False)
         orders.items.add(*cart)
         messages.info(request, "Go ahead and place your order below")
     else:
         messages.info(request, "Go ahead and place your order below")
 
-    order_summary = Order.objects.all()
+    order_summary = Order.objects.filter(user=request.user, ordered = False)
     context = {
         "user": request.user,
         "orders": order_summary,
     }
     return render(request, "./order_summary.html", context)
 
+@login_required
 def transaction(request, slug):
     orders = Order.objects.filter(user = request.user, ordered = False)
-    if slug == "success":
+    cart = CartItem.objects.filter(user=request.user, has_ordered=False)
+
+    paystack_url = f"https://api.paystack.co/transaction/verify/{slug}"
+    headers = {
+        "Authorization": "Bearer sk_test_febf6999f417c5d1d4b7a20b6b01f009b35e9d55",
+    }
+    res = requests.get(url= paystack_url, headers= headers)
+    verification_obj = res.json()
+    status = verification_obj["data"]["status"]
+    
+    if status == "success":
         for i in orders:
             i.ordered = True
+            i.ordered_date = datetime.now()
+            i.status = "pending"
+            i.save()
+
+        for n in cart:
+            n.has_ordered = True
+            n.save()
+
         messages.success(request, "Your orders have successfully been placed!")
     else:
-        messages.error(request, "Your orders were not placed successfully, why not try again?")
+        messages.error(request, "Your orders were not placed successfully, it seems an error occured. Why not try again?")
 
     return redirect("dashboardpage")
 

@@ -2,9 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models.deletion import CASCADE
-from django.shortcuts import reverse
 from gdstorage.storage import GoogleDriveStorage
-from datetime import datetime
 
 gd_storage = GoogleDriveStorage()
 
@@ -17,11 +15,20 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=80, blank=True)
     billing_address = models.TextField(blank=True)
     state = models.CharField(max_length=80, blank=True)
-    profile_pic = models.ImageField(upload_to = "user_images/", storage = gd_storage, blank=True)
 
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    def __str__(self) -> str:
+        return self.email
+
+class UserImage(models.Model):
+    user = models.OneToOneField(to= get_user_model(), on_delete=CASCADE)
+    profile_pic = models.ImageField(upload_to= "user_images/", storage = gd_storage)
+
+    def __str__(self) -> str:
+        return self.user.email
 
 class Subscriber(models.Model):
     email = models.EmailField(unique=True, serialize=True)
@@ -62,21 +69,6 @@ class Product(models.Model):
     def __str__(self) -> str:
         return self.name
 
-    def get_absolute_url(self):
-        return reverse("detailspage", kwargs={
-            "pk": self.pk
-        })
-    
-    def get_add_to_cart_url(self):
-        return reverse("add-to-cart", kwargs={
-            "pk": self.pk
-        })
-
-    def get_remove_from_cart_url(self):
-        return reverse("remove-from-cart", kwargs={
-            "pk": self.pk
-        })
-
 class Product_image(models.Model):
     name = models.ForeignKey(to=Product, on_delete= CASCADE, serialize=True)
     images = models.ImageField(upload_to = "other_images/", storage = gd_storage)
@@ -91,7 +83,7 @@ class CartItem(models.Model):
     quantity = models.SmallIntegerField(default=1)
 
     def __str__(self) -> str:
-        return f"{self.quantity} {self.item.name}"
+        return f"{self.item.name} -- x{self.quantity}"
 
     def get_total_item_price(self):
         return self.quantity * self.item.price
@@ -106,10 +98,26 @@ class CartItem(models.Model):
         return self.get_total_item_price() - self.get_total_final_price()
 
 class Order(models.Model):
+    choices = [
+        ("not yet ordered", "not yet ordered"),
+        ("pending", "pending"),
+        ("received", "received"),
+        ("processing", "processing"),
+        ("processed", "processed"),
+        ("deliverying", "deliverying"),
+        ("delivered", "delivered"),
+        ("confirmed", "confirmed"),
+        ("returned", "returned"),
+        ("return rejected", "return rejected"),
+        ("return processed", "return processed"),
+        ("return refunded", "return refunded"),
+    ]
     user = models.ForeignKey(to=get_user_model(), on_delete=CASCADE)
     items = models.ManyToManyField(CartItem)
     start_date = models.DateTimeField(auto_now_add=True)
+    ordered_date = models.DateField(auto_now_add=True, blank=True)
     ordered = models.BooleanField(default=False)
+    status = models.CharField(choices= choices, blank=True, max_length=200, default="not yet ordered")
 
     def get_total_price(self):
         total_amount = 0
