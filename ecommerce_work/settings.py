@@ -91,17 +91,17 @@ AUTH_USER_MODEL = "dbmodels.User"
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-DEFAULT_FROM_EMAIL = 'chukwujiobicanon@outlook.com'
+DEFAULT_FROM_EMAIL = 'tiffanyrenzel@icloud.com'
 
-SERVER_EMAIL = 'chukwujiobicanon@outlook.com'
+SERVER_EMAIL = 'tiffanyrenzel@icloud.com'
 
-EMAIL_HOST = 'outlook.office365.com'
+EMAIL_HOST = 'smtp.mail.me.com'
 
 EMAIL_USE_TLS = True
 
-EMAIL_PORT = 993
+EMAIL_PORT = 587
 
-EMAIL_HOST_USER = 'chukwujiobicanon@outlook.com'
+EMAIL_HOST_USER = 'tiffanyrenzel@icloud.com'
 
 EMAIL_PASSWORD = 'Keshadel1'
 

@@ -19,7 +19,7 @@
 	{% block log %}
 		<!-- login -->
 		<div class="w3l_login">
-			<a href="{% url 'dashboardpage' %}">{% if user.profile_pic %}<img src="{{ user.profile_pic.url }}">{% else %}<i
+			<a href="{% url 'dashboardpage' %}">{% if userimage.profile_pic %}<img src="{{ userimage.profile_pic.url }}">{% else %}<i
 					class="fas fa-user"></i>{% endif %}</a>
 		</div>
 	{% endblock %}
@@ -122,20 +122,18 @@
                                                                 <th style="color: gray;">Status</th>
                                                                 <th style="color: gray;">Date</th>
                                                                 <th style="color: gray;">Total</th>
-                                                                <th style="color: gray;">Status</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            {% for order in orders.order %}
+                                                            {% for order in orders %}
                                                             <tr>
-                                                                <td style="color: gray;">#1</td>
-                                                                <td style="color: gray;">{% if order.ordered %}Ordered{% else %}<a href="#">Place Order</a>{% endif %}</td>
-                                                                <td style="color: gray;">{% if order.ordered %}{{ order.ordered_date }}{% endif %}</td>
-                                                                <td style="color: gray;">{{ order.get_total_price }}</td>
-                                                                <td style="color: gray;"><a href="#" class="btn-small d-block">View</a></td>
+                                                                <td style="color: gray;"><b>#</b><br>{% for item in order.items.all %}{{ item }}<br>{% endfor %}</td>
+                                                                <td style="color: gray;"><em>{{ order.status }}</em></td>
+                                                                <td style="color: gray;">{% if order.ordered %}{{ order.ordered_date }}{% else %}No Orders yet{% endif %}</td>
+                                                                <td style="color: gray;"><b>$</b>{{ order.get_total_price }}</td>
                                                             </tr>
                                                         {% empty %}
-                                                        <tr><p>You have not ordered anything yet. Why not go over to your cart and place an order? <a href="#"></a></p></tr>
+                                                        <tr><p style="background-color: rgb(240, 72, 72); color: white; border: none; border-radius: 5px; padding-left: 5px;">You have not ordered anything yet. Why not go over to your   <a style="color: rgb(7, 39, 180);" href="{% url 'shop_page' 'fashion' %}"><b style="text-decoration: underline;">cart</b></a>  and make an order?</p></tr>
                                                         {% endfor %}
                                                         </tbody>
                                                     </table>
@@ -178,7 +176,7 @@
                                             </div>
                                             <div class="card-body">
                                                 <p style="color: gray;">Do you want to update your account details</p>
-                                                <form method="post" action="{% url 'updateview' %}">
+                                                <form method="post" action="{% url 'updateview' %}" enctype="multipart/form-data">
                                                     {% csrf_token %}
                                                     <div class="row">
                                                         <div class="form-group col-md-6">
