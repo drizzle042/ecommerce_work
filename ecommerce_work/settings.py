@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'dbmodels',
     'mathfilters',
     'gdstorage',
+    'django_image_compressor',
 ]
 
 MIDDLEWARE = [
