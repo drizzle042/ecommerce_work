@@ -4,6 +4,7 @@ certifi==2021.10.8
 charset-normalizer==2.0.12
 Django==4.0.1
 django-googledrive-storage==1.6.0
+django-image-compressor==0.3.6
 django-mathfilters==1.0.0
 google-api-core==2.7.1
 google-api-python-client==2.43.0
