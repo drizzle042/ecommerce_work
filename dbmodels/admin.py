@@ -45,6 +45,7 @@ class OrderInterface(admin.ModelAdmin):
 # Register your models here.
 
 admin.site.register(User, UserAdmin)
+admin.site.register(UserImage)
 admin.site.register(Product, ProductInterface)
 admin.site.register(Product_image, ProductImageInterface)
 admin.site.register(Subscriber)

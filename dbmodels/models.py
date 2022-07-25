@@ -1,10 +1,7 @@
+from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth import get_user_model
-from django.db import models
 from django.db.models.deletion import CASCADE
-from gdstorage.storage import GoogleDriveStorage
-
-gd_storage = GoogleDriveStorage()
 
 # Create your models here.
 
@@ -25,7 +22,7 @@ class User(AbstractUser):
 
 class UserImage(models.Model):
     user = models.OneToOneField(to= get_user_model(), on_delete=CASCADE)
-    profile_pic = models.ImageField(upload_to= "user_images/", storage = gd_storage)
+    profile_pic = models.ImageField(upload_to= "user_images/")
 
     def __str__(self) -> str:
         return self.user.email
@@ -58,9 +55,9 @@ class Product(models.Model):
     ]
     name = models.CharField(max_length=120, unique=True, serialize=True)
     slug = models.SlugField(allow_unicode=True, unique=True, serialize=True)
-    price = models.IntegerField(serialize=True)
-    discount = models.IntegerField(blank=True, serialize=True, default=0)
-    mainImage = models.ImageField(upload_to = "main_images/", storage = gd_storage)
+    price = models.DecimalField(serialize=True, decimal_places=2, max_digits=6)
+    discount = models.DecimalField(blank=True, serialize=True, default=0, decimal_places=2, max_digits=6)
+    mainImage = models.ImageField(upload_to = "main_images/")
     mainCategory = models.CharField(max_length=30, choices=mainCategoryChoices, serialize=True)
     subCategory = models.CharField(max_length=30, serialize=True)
     description = models.TextField(blank=True, help_text="Product details", serialize=True)
@@ -71,7 +68,7 @@ class Product(models.Model):
 
 class Product_image(models.Model):
     name = models.ForeignKey(to=Product, on_delete= CASCADE, serialize=True)
-    images = models.ImageField(upload_to = "other_images/", storage = gd_storage)
+    images = models.ImageField(upload_to = "other_images/")
     
     def __str__(self) -> str:
         return self.name.name
