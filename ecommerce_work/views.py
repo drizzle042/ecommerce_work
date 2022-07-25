@@ -9,7 +9,7 @@ from django.contrib.auth.models import User
 from django.core.mail import EmailMessage
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from dbmodels.models import *
-import requests
+import urllib
 from datetime import datetime
 
 products = Product.objects.all()
@@ -178,6 +178,7 @@ def update(request):
         if password == password2 and len(password) >= 8:
             passcode = password
             user = authenticate(request, email=email, password=current_password)
+            user_image, created = UserImage.objects.get_or_create(user = request.user)
             if user is not None:
                 user.first_name = firstname
                 user.last_name = lastname
@@ -185,11 +186,12 @@ def update(request):
                 user.email = email
                 user.billing_address = billing_address
                 user.state = state
-                UserImage.objects.get_or_create(user = request.user, profile_pic = profile_photo)
                 user.set_password(passcode)
                 user.save()
+                user_image.profile_pic = profile_photo
+                user_image.save()
 
-                messages.success(request, "We have Successfully updated your account!")
+                messages.success(request, "You have Successfully updated your account!")
                 return redirect("dashboardpage") 
             else:
                 messages.error(request, f"Wrong email: {email}, or password! \n Please review...")
@@ -210,7 +212,7 @@ def sign_in(request):
         user = authenticate(request, email=email, password=password)
         if user is not None:
             login(request, user)
-            messages.success(request, f"Welcome back {request.user.username}!")
+            messages.success(request, f"Welcome back {request.user.first_name}!")
             return redirect("dashboardpage")
         else:
             messages.error(request, "Please check your login details")
@@ -319,7 +321,7 @@ def transaction(request, slug):
     headers = {
         "Authorization": "Bearer sk_test_febf6999f417c5d1d4b7a20b6b01f009b35e9d55",
     }
-    res = requests.get(url= paystack_url, headers= headers)
+    res = urllib.request.Request(url= paystack_url, headers= headers)
     verification_obj = res.json()
     status = verification_obj["data"]["status"]
     
